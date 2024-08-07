@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GraphProcessor;
+using System;
 
 public class RuntimeGraph : MonoBehaviour
 {
 	public BaseGraph	graph;
+	[NonSerialized]
+	public BaseGraph runtimeGraph;
 	public ProcessGraphProcessor	processor;
 
 	public GameObject	assignedGameObject;
@@ -13,19 +16,23 @@ public class RuntimeGraph : MonoBehaviour
 	private void Start()
 	{
 		if (graph != null)
-			processor = new ProcessGraphProcessor(graph);
+		{
+			runtimeGraph = Instantiate(graph);
+			runtimeGraph.hideFlags = HideFlags.HideAndDontSave;
+			processor = new ProcessGraphProcessor(runtimeGraph);
+		}
 	}
 
 	int i = 0;
 
     void Update()
     {
-		if (graph != null)
+		if (runtimeGraph != null)
 		{
-			graph.SetParameterValue("Input", (float)i++);
-			graph.SetParameterValue("GameObject", assignedGameObject);
+            runtimeGraph.SetParameterValue("Input", (float)i++);
+			runtimeGraph.SetParameterValue("GameObject", assignedGameObject);
 			processor.Run();
-			Debug.Log("Output: " + graph.GetParameterValue("Output"));
+			Debug.Log("Output: " + runtimeGraph.GetParameterValue("Output"));
 		}
     }
 }
