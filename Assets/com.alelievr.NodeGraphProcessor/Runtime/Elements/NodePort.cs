@@ -72,6 +72,7 @@ namespace GraphProcessor
 	/// </summary>
 	public class NodePort
 	{
+		public int index;
 		/// <summary>
 		/// The actual name of the property behind the port (must be exact, it is used for Reflection)
 		/// </summary>
@@ -112,7 +113,7 @@ namespace GraphProcessor
 		/// <param name="owner">owner node</param>
 		/// <param name="fieldName">the C# property name</param>
 		/// <param name="portData">Data of the port</param>
-		public NodePort(BaseNode owner, string fieldName, PortData portData) : this(owner, owner, fieldName, portData) {}
+		public NodePort(BaseNode owner, string fieldName, PortData portData, int index) : this(owner, owner, fieldName, portData, index) {}
 
 		/// <summary>
 		/// Constructor
@@ -121,12 +122,13 @@ namespace GraphProcessor
 		/// <param name="fieldOwner"></param>
 		/// <param name="fieldName">the C# property name</param>
 		/// <param name="portData">Data of the port</param>
-		public NodePort(BaseNode owner, object fieldOwner, string fieldName, PortData portData)
+		public NodePort(BaseNode owner, object fieldOwner, string fieldName, PortData portData, int index)
 		{
 			this.fieldName = fieldName;
 			this.owner     = owner;
 			this.portData  = portData;
 			this.fieldOwner = fieldOwner;
+			this.index = index;
 
 			fieldInfo = fieldOwner.GetType().GetField(
 				fieldName,

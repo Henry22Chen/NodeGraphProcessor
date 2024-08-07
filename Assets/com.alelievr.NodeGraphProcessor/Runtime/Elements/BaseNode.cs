@@ -11,13 +11,7 @@ namespace GraphProcessor
 	public delegate IEnumerable< PortData > CustomPortBehaviorDelegate(List< SerializableEdge > edges);
 	public delegate IEnumerable< PortData > CustomPortTypeBehaviorDelegate(string fieldName, string displayName, object value);
 
-    [Serializable]
-    public struct NodeField<T>
-	{
-		[NonSerialized]
-		public T RuntimeValue;
-		public T SerializedValue;
-	}
+
 	[Serializable]
 	public abstract class BaseNode
 	{
@@ -147,6 +141,8 @@ namespace GraphProcessor
 
 		[NonSerialized]
 		protected BaseGraph			graph;
+
+		private List<Delegate> outputReaders = new List<Delegate>();
 
 		internal class NodeFieldInformation
 		{
@@ -314,12 +310,28 @@ namespace GraphProcessor
 			return fields.OrderByDescending(f => (long)(((GetFieldInheritanceLevel(f) << 32)) | (long)f.MetadataToken));
 		}
 
+		protected virtual IEnumerable<Delegate> InitializeOutputReaders()
+		{
+			return null;
+		}
+
 		protected BaseNode()
 		{
             inputPorts = new NodeInputPortContainer(this);
             outputPorts = new NodeOutputPortContainer(this);
 
 			InitializeInOutDatas();
+			var it = InitializeOutputReaders();
+			if (it != null)
+			{
+				outputReaders.Clear();
+				outputReaders.AddRange(it);
+			}
+		}
+
+		protected Func<T> CreateOutputReader<T>(Func<T> field)
+		{
+			return field;
 		}
 
 		/// <summary>
@@ -634,15 +646,40 @@ namespace GraphProcessor
 			onAfterEdgeDisconnected?.Invoke(edge);
 		}
 
+        protected virtual void OnReadInput(int index)
+		{
+
+		}
+
+		protected void ReadValueForField<T>(int index, ref T field)
+		{
+			var port = inputPorts[index];
+			var edges = port.GetEdges();
+			if (edges.Count > 0)
+			{
+				var edge = edges[0];
+				var inputPort = edge.outputPort;
+				if (inputPort.index < inputPort.owner.outputReaders.Count)
+				{
+					var reader = inputPort.owner.outputReaders[inputPort.index] as Func<T>;
+					field = reader.Invoke();
+				}
+			}
+		}
+
 		public void OnProcess()
 		{
-			inputPorts.PullDatas();
+			for (int i = 0; i < inputPorts.Count; i++)
+			{
+				OnReadInput(i);
+			}
+			//inputPorts.PullDatas();
 
 			ExceptionToLog.Call(() => Process());
 
 			InvokeOnProcessed();
 
-			outputPorts.PushDatas();
+			//outputPorts.PushDatas();
 		}
 
 		public void InvokeOnProcessed() => onProcessed?.Invoke();
@@ -665,31 +702,29 @@ namespace GraphProcessor
 		/// </summary>
 		protected virtual void Process() {}
 
-		#endregion
+        #endregion
 
-		#region API and utils
+        #region API and utils
 
-		/// <summary>
-		/// Add a port
-		/// </summary>
-		/// <param name="input">is input port</param>
-		/// <param name="fieldName">C# field name</param>
-		/// <param name="portData">Data of the port</param>
-		public void AddPort(bool input, string fieldName, PortData portData)
+        /// <summary>
+        /// Add a port
+        /// </summary>
+        /// <param name="input">is input port</param>
+        /// <param name="fieldName">C# field name</param>
+        /// <param name="portData">Data of the port</param>
+        public void AddPort(bool input, string fieldName, PortData portData)
 		{
 			// Fixup port data info if needed:
 			if (portData.displayType == null)
 			{
 				var ft = nodeFields[fieldName].info.FieldType;
-				if(ft.IsGenericType && ft.GetGenericTypeDefinition()== typeof(NodeField<>))
-					ft = ft.GetGenericArguments()[0];
                 portData.displayType = ft;
 			}
 
 			if (input)
-				inputPorts.Add(new NodePort(this, fieldName, portData));
+				inputPorts.Add(new NodePort(this, fieldName, portData, inputPorts.Count));
 			else
-				outputPorts.Add(new NodePort(this, fieldName, portData));
+				outputPorts.Add(new NodePort(this, fieldName, portData, outputPorts.Count));
 		}
 
 		/// <summary>
