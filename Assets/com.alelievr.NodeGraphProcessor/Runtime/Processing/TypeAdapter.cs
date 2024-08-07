@@ -22,6 +22,11 @@ namespace GraphProcessor
         public virtual IEnumerable<(Type, Type)> GetIncompatibleTypes() { yield break; }
     }
 
+    public interface ITypeConversion<T, T2>
+    {
+        public T2 ConvertTo(T input);
+    }
+
     public static class TypeAdapter
     {
         static Dictionary< (Type from, Type to), Func<object, object> > adapters = new Dictionary< (Type, Type), Func<object, object> >();

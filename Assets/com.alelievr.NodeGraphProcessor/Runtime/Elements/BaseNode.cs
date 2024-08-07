@@ -11,6 +11,13 @@ namespace GraphProcessor
 	public delegate IEnumerable< PortData > CustomPortBehaviorDelegate(List< SerializableEdge > edges);
 	public delegate IEnumerable< PortData > CustomPortTypeBehaviorDelegate(string fieldName, string displayName, object value);
 
+    [Serializable]
+    public struct NodeField<T>
+	{
+		[NonSerialized]
+		public T RuntimeValue;
+		public T SerializedValue;
+	}
 	[Serializable]
 	public abstract class BaseNode
 	{
@@ -672,7 +679,12 @@ namespace GraphProcessor
 		{
 			// Fixup port data info if needed:
 			if (portData.displayType == null)
-				portData.displayType = nodeFields[fieldName].info.FieldType;
+			{
+				var ft = nodeFields[fieldName].info.FieldType;
+				if(ft.IsGenericType && ft.GetGenericTypeDefinition()== typeof(NodeField<>))
+					ft = ft.GetGenericArguments()[0];
+                portData.displayType = ft;
+			}
 
 			if (input)
 				inputPorts.Add(new NodePort(this, fieldName, portData));

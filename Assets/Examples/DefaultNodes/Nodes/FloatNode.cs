@@ -16,3 +16,16 @@ public class FloatNode : BaseNode
 
 	protected override void Process() => output = input;
 }
+[NodeMenuItem("Primitives/Float2")]
+public class Float2Node : BaseNode
+{
+    [Output("Out")]
+    public NodeField<float> output;
+
+    [Input("In"),ShowAsDrawer]
+    public NodeField<float> input;
+
+    public override string name => "Float";
+
+    protected override void Process() => output.RuntimeValue = input.RuntimeValue;
+}

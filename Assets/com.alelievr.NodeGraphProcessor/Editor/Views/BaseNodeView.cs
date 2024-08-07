@@ -854,7 +854,13 @@ namespace GraphProcessor
 			if (field == null)
 				return null;
 
-			var element = new PropertyField(FindSerializedProperty(field.Name), showInputDrawer ? "" : label);
+			PropertyField element;
+			if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(NodeField<>))
+			{
+                element = new PropertyField(FindSerializedProperty(field.Name).FindPropertyRelative("SerializedValue"), showInputDrawer ? "" : label);
+            }
+			else
+				element = new PropertyField(FindSerializedProperty(field.Name), showInputDrawer ? "" : label);
 			element.Bind(owner.serializedGraph);
 
 #if UNITY_2020_3 // In Unity 2020.3 the empty label on property field doesn't hide it, so we do it manually
