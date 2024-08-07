@@ -312,7 +312,7 @@ namespace GraphProcessor
 
 		protected virtual IEnumerable<Delegate> InitializeOutputReaders()
 		{
-			return null;
+			yield break;
 		}
 
 		protected BaseNode()
@@ -651,7 +651,7 @@ namespace GraphProcessor
 
 		}
 
-		protected void ReadValueForField<T>(int index, ref T field)
+		protected bool ReadValueForField<T>(int index, ref T field)
 		{
 			var port = inputPorts[index];
 			var edges = port.GetEdges();
@@ -662,12 +662,39 @@ namespace GraphProcessor
 				if (inputPort.index < inputPort.owner.outputReaders.Count)
 				{
 					var reader = inputPort.owner.outputReaders[inputPort.index] as Func<T>;
-					field = reader.Invoke();
+					if (reader != null)
+					{
+						field = reader.Invoke();
+						return true;
+					}
 				}
 			}
+			return false;
 		}
 
-		public void OnProcess()
+        protected bool ReadValueForField<T, T2>(int index, ref T2 field)
+        {
+            var port = inputPorts[index];
+            var edges = port.GetEdges();
+            if (edges.Count > 0)
+            {
+                var edge = edges[0];
+                var inputPort = edge.outputPort;
+                if (inputPort.index < inputPort.owner.outputReaders.Count)
+                {
+                    var reader = inputPort.owner.outputReaders[inputPort.index] as Func<T>;
+					if (reader != null)
+					{
+						var val = reader.Invoke();
+						field = TypeAdapter.Convert<T, T2>(val);
+						return true;
+					}
+                }
+            }
+            return false;
+        }
+
+        public void OnProcess()
 		{
 			for (int i = 0; i < inputPorts.Count; i++)
 			{

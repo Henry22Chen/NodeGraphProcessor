@@ -32,7 +32,10 @@ public class Float2Node : BaseNode
 
     protected override void OnReadInput(int index)
     {
-        ReadValueForField(index, ref input);
+        if(!ReadValueForField(index, ref input))
+        {
+            ReadValueForField<Vector4, float>(index, ref input);
+        }
     }
     protected override IEnumerable<Delegate> InitializeOutputReaders()
     {

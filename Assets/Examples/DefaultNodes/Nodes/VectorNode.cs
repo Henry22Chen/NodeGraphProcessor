@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GraphProcessor;
 using System.Linq;
+using System;
 
 [System.Serializable, NodeMenuItem("Custom/Vector")]
 public class VectorNode : BaseNode
@@ -19,4 +20,9 @@ public class VectorNode : BaseNode
 	{
 		output = input;
 	}
+
+    protected override IEnumerable<Delegate> InitializeOutputReaders()
+    {
+		yield return CreateOutputReader(() => output);
+    }
 }
