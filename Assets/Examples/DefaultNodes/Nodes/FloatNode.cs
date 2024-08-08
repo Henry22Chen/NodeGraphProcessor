@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GraphProcessor;
 using System;
+using System.Reflection;
 
 [System.Serializable, NodeMenuItem("Primitives/Float")]
 public class FloatNode : BaseNode
@@ -28,17 +29,19 @@ public class Float2Node : BaseNode
 
     public override string name => "Float";
 
-    protected override void Process() => output = input;
+    protected override bool propagateValues => false;
 
-    protected override void OnReadInput(int index)
+    protected override void Process()
     {
-        if(!ReadValueForField(index, ref input))
+        if (!TryReadInputValue(0, ref input))
         {
-            ReadValueForField<Vector4, float>(index, ref input);
+            TryReadInputValue<Vector4, float>(0, ref input);
         }
+        output = input;
     }
-    protected override IEnumerable<Delegate> InitializeOutputReaders()
+
+    protected override bool TryGetOutputValue<T>(int index, out T value)
     {
-        yield return CreateOutputReader(()=>output);
+        return TryConvertValue(ref this.output, out value);
     }
 }

@@ -20,9 +20,8 @@ public class VectorNode : BaseNode
 	{
 		output = input;
 	}
-
-    protected override IEnumerable<Delegate> InitializeOutputReaders()
+    protected override bool TryGetOutputValue<T>(int index, out T value)
     {
-		yield return CreateOutputReader(() => output);
+        return TryConvertValue(ref output, out value);
     }
 }

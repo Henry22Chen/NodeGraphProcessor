@@ -59,6 +59,8 @@ namespace GraphProcessor
 		/// <summary>True if the node can be deleted, false otherwise</summary>
 		public virtual bool			deletable => true;
 
+		protected virtual bool propagateValues => true;
+
 		/// <summary>
 		/// Container of input ports
 		/// </summary>
@@ -141,8 +143,6 @@ namespace GraphProcessor
 
 		[NonSerialized]
 		protected BaseGraph			graph;
-
-		private List<Delegate> outputReaders = new List<Delegate>();
 
 		internal class NodeFieldInformation
 		{
@@ -310,23 +310,12 @@ namespace GraphProcessor
 			return fields.OrderByDescending(f => (long)(((GetFieldInheritanceLevel(f) << 32)) | (long)f.MetadataToken));
 		}
 
-		protected virtual IEnumerable<Delegate> InitializeOutputReaders()
-		{
-			yield break;
-		}
-
 		protected BaseNode()
 		{
             inputPorts = new NodeInputPortContainer(this);
             outputPorts = new NodeOutputPortContainer(this);
 
 			InitializeInOutDatas();
-			var it = InitializeOutputReaders();
-			if (it != null)
-			{
-				outputReaders.Clear();
-				outputReaders.AddRange(it);
-			}
 		}
 
 		protected Func<T> CreateOutputReader<T>(Func<T> field)
@@ -646,12 +635,26 @@ namespace GraphProcessor
 			onAfterEdgeDisconnected?.Invoke(edge);
 		}
 
-        protected virtual void OnReadInput(int index)
+		protected virtual bool TryGetOutputValue<T>(int index, out T value)
 		{
-
+			value = default(T);
+			return false;
 		}
 
-		protected bool ReadValueForField<T>(int index, ref T field)
+		protected bool TryConvertValue<T, T2>(ref T value, out T2 output)
+		{
+			if (value is T2 finalValue)
+			{
+				output = finalValue;
+				return true;
+			}
+			else
+			{
+				output = default;
+				return false;
+			}
+		}
+		protected bool TryReadInputValue<T>(int index, ref T field)
 		{
 			var port = inputPorts[index];
 			var edges = port.GetEdges();
@@ -659,20 +662,13 @@ namespace GraphProcessor
 			{
 				var edge = edges[0];
 				var inputPort = edge.outputPort;
-				if (inputPort.index < inputPort.owner.outputReaders.Count)
-				{
-					var reader = inputPort.owner.outputReaders[inputPort.index] as Func<T>;
-					if (reader != null)
-					{
-						field = reader.Invoke();
-						return true;
-					}
-				}
+				if (inputPort.owner.TryGetOutputValue(inputPort.index, out field))
+					return true;
 			}
 			return false;
 		}
 
-        protected bool ReadValueForField<T, T2>(int index, ref T2 field)
+        protected bool TryReadInputValue<T, T2>(int index, ref T2 field)
         {
             var port = inputPorts[index];
             var edges = port.GetEdges();
@@ -680,15 +676,10 @@ namespace GraphProcessor
             {
                 var edge = edges[0];
                 var inputPort = edge.outputPort;
-                if (inputPort.index < inputPort.owner.outputReaders.Count)
-                {
-                    var reader = inputPort.owner.outputReaders[inputPort.index] as Func<T>;
-					if (reader != null)
-					{
-						var val = reader.Invoke();
-						field = TypeAdapter.Convert<T, T2>(val);
-						return true;
-					}
+                if (inputPort.owner.TryGetOutputValue<T>(inputPort.index, out var val))
+				{
+                    field = TypeAdapter.Convert<T, T2>(val);
+					return true;
                 }
             }
             return false;
@@ -696,17 +687,16 @@ namespace GraphProcessor
 
         public void OnProcess()
 		{
-			for (int i = 0; i < inputPorts.Count; i++)
-			{
-				OnReadInput(i);
-			}
-			//inputPorts.PullDatas();
+			bool propagate = propagateValues;
+			if (propagate)
+				inputPorts.PullDatas();
 
 			ExceptionToLog.Call(() => Process());
 
 			InvokeOnProcessed();
 
-			//outputPorts.PushDatas();
+            if (propagate)
+                outputPorts.PushDatas();
 		}
 
 		public void InvokeOnProcessed() => onProcessed?.Invoke();
