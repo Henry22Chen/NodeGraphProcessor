@@ -154,33 +154,33 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: a44bbdaf-f7cd-4c76-bf6d-7d355f5e6009
+  - GUID: 78f1f26c-dfe7-43bb-9a78-bf365d9c0638
     owner: {fileID: 11400000}
     inputNodeGUID: a96c9f2d-98f9-4662-9fa6-20c77a144932
     outputNodeGUID: 4d4af3d6-83db-4fdb-8cbe-5d88ae870d71
     inputFieldName: input
     outputFieldName: output
     inputPortIdentifier: 
-    outputPortIdentifier: 
+    outputPortIdentifier: x
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
     position:
       serializedVersion: 2
-      x: 377
-      y: 38
-      width: 460
-      height: 370
+      x: 286.14996
+      y: -27.549973
+      width: 312
+      height: 84
     size: {x: 300, y: 100}
     innerNodeGUIDs: []
   - title: Print
     color: {r: 0.4627451, g: 0.14901963, b: 0.20610665, a: 1}
     position:
       serializedVersion: 2
-      x: -67.000015
-      y: 53.999996
-      width: 260
-      height: 346.99997
+      x: -137.15002
+      y: 4.549984
+      width: 127
+      height: 84
     size: {x: 300, y: 100}
     innerNodeGUIDs: []
   stackNodes:
@@ -347,8 +347,8 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 597, y: -418, z: 0}
-  scale: {x: 0.8695652, y: 0.8695652, z: 1}
+  position: {x: 715, y: -735, z: 0}
+  scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 2
     RefIds:
@@ -459,8 +459,8 @@ MonoBehaviour:
         computeOrder: 7
         position:
           serializedVersion: 2
-          x: 914
-          y: -184
+          x: 844.85004
+          y: -100.600006
           width: 136
           height: 223
         expanded: 1
@@ -541,10 +541,10 @@ MonoBehaviour:
         computeOrder: 11
         position:
           serializedVersion: 2
-          x: -124.79325
-          y: 477.20392
-          width: 159
-          height: 92
+          x: -262.00006
+          y: 549.50006
+          width: 156
+          height: 89
         expanded: 1
         debug: 0
         nodeLock: 0
@@ -622,10 +622,10 @@ MonoBehaviour:
         computeOrder: 16
         position:
           serializedVersion: 2
-          x: 1248
-          y: 637
-          width: 127
-          height: 245
+          x: 1169.8004
+          y: 526.6
+          width: 153
+          height: 262
         expanded: 1
         debug: 0
         nodeLock: 0
@@ -789,12 +789,11 @@ MonoBehaviour:
     - rid: 24
       type: {class: BaseStackNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
-        position: {x: 909.6522, y: -238.63478}
+        position: {x: 1050.0002, y: -201.00003}
         title: Stack
         acceptDrop: 1
         acceptNewNode: 1
         nodeGUIDs:
-        - ffd2cf4b-87c3-42a6-9822-04bae7a5700b
         - 42eb43b8-ac7e-4f38-b49b-26ba1bc42732
         - e99da4fb-6a11-4b19-8594-f37f55d96114
     - rid: 25
@@ -828,15 +827,15 @@ MonoBehaviour:
         computeOrder: 25
         position:
           serializedVersion: 2
-          x: -40.99998
-          y: 938.00006
-          width: 102
+          x: -42.999985
+          y: 1010.0001
+          width: 148
           height: 99
         expanded: 0
         debug: 0
         nodeLock: 0
-        output: 0
-        input: 0
+        output: 109.7
+        input: 109.7
     - rid: 3729079590015467991
       type: {class: Float2Node, ns: , asm: Assembly-CSharp}
       data:
@@ -845,15 +844,15 @@ MonoBehaviour:
         computeOrder: 26
         position:
           serializedVersion: 2
-          x: 167.09999
-          y: 958.7002
+          x: 214.15004
+          y: 938.0001
           width: 102
           height: 99
         expanded: 1
         debug: 0
         nodeLock: 0
-        output: 0
-        input: 0
+        output: 109.7
+        input: 109.7
     - rid: 3729079632048160820
       type: {class: VectorNode, ns: , asm: Assembly-CSharp}
       data:
@@ -862,12 +861,13 @@ MonoBehaviour:
         computeOrder: 24
         position:
           serializedVersion: 2
-          x: -163.00005
-          y: 709.15015
-          width: 102
-          height: 171
+          x: -262.00006
+          y: 879.913
+          width: 108
+          height: 195
         expanded: 0
         debug: 0
         nodeLock: 0
-        output: {x: 111, y: 0, z: 0, w: 0}
-        input: {x: 111, y: 0, z: 0, w: 0}
+        output: {x: 109.7, y: 33, z: 0, w: 0}
+        input: {x: 109.7, y: 33, z: 0, w: 0}
+        input2: {x: 0, y: 0, z: 0}

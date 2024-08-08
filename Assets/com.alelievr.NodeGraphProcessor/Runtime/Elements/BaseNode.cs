@@ -398,7 +398,7 @@ namespace GraphProcessor
 
 			void AddPortData(PortData portData)
 			{
-				var port = nodePorts.FirstOrDefault(n => n.portData.identifier == portData.identifier);
+				var port = nodePorts.FirstOrDefault(n => n.portData.identifier == portData.identifier); 
 				// Guard using the port identifier so we don't duplicate identifiers
 				if (port == null)
 				{
@@ -442,7 +442,7 @@ namespace GraphProcessor
 			}
 
 			// Make sure the port order is correct:
-			portCollection.Sort((p1, p2) => {
+			/*portCollection.Sort((p1, p2) => {
 				int p1Index = finalPorts.FindIndex(id => p1.portData.identifier == id);
 				int p2Index = finalPorts.FindIndex(id => p2.portData.identifier == id);
 
@@ -450,7 +450,7 @@ namespace GraphProcessor
 					return 0;
 
 				return p1Index.CompareTo(p2Index);
-			});
+			})*/;
 
 			if (sendPortUpdatedEvent)
 				onPortsUpdated?.Invoke(fieldName);
@@ -732,11 +732,12 @@ namespace GraphProcessor
 				displayName = fieldName;
 			PortData portData = new PortData
 			{
-				acceptMultipleEdges= allowMultiple,
-				displayName= displayName,
-				displayType= displayType,
-				tooltip= tooltip,
-			    vertical= vertical,
+				acceptMultipleEdges = allowMultiple,
+				displayName = displayName,
+				displayType = displayType,
+				tooltip = tooltip,
+				vertical = vertical,
+				identifier = displayName
 			};
 			AddPort(input, fieldName, portData);
         }
