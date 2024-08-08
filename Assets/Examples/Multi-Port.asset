@@ -24,31 +24,7 @@ MonoBehaviour:
   - rid: 3729079590015467711
   - rid: 3729079590015467712
   - rid: 3729079590015467864
-  edges:
-  - GUID: 677d1ad1-38e2-46c6-954a-333e2dd6216e
-    owner: {fileID: 11400000}
-    inputNodeGUID: e33e83d3-9e78-414e-b9b2-ba99ca9b56ea
-    outputNodeGUID: 6905b57d-a5a7-4b09-a220-8be5fff7aa14
-    inputFieldName: obj
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: e7acb91a-80ff-475f-9e5d-f5c4fbf96484
-    owner: {fileID: 11400000}
-    inputNodeGUID: 6905b57d-a5a7-4b09-a220-8be5fff7aa14
-    outputNodeGUID: 3bb6c7fa-55da-4b2d-9da9-f5b72a096c6e
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 2
-    outputPortIdentifier: 
-  - GUID: f0824f49-1a8e-4771-a7b8-2f2b6fc92b3f
-    owner: {fileID: 11400000}
-    inputNodeGUID: 6905b57d-a5a7-4b09-a220-8be5fff7aa14
-    outputNodeGUID: 034c760d-dc32-4435-9bf9-92b10b8f708f
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
+  edges: []
   groups: []
   stackNodes: []
   pinnedElements:
@@ -96,7 +72,7 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 176, y: 164, z: 0}
+  position: {x: 182, y: 50, z: 0}
   scale: {x: 0.7561437, y: 0.7561437, z: 1}
   references:
     version: 2
@@ -123,13 +99,13 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 6905b57d-a5a7-4b09-a220-8be5fff7aa14
-        computeOrder: 3
+        computeOrder: 1
         position:
           serializedVersion: 2
-          x: 548
-          y: 38
-          width: 116
-          height: 149
+          x: 541.5
+          y: 37.999996
+          width: 155
+          height: 75
         expanded: 1
         debug: 0
         nodeLock: 0
@@ -155,7 +131,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: e33e83d3-9e78-414e-b9b2-ba99ca9b56ea
-        computeOrder: 4
+        computeOrder: 3
         position:
           serializedVersion: 2
           x: 782
@@ -170,7 +146,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 034c760d-dc32-4435-9bf9-92b10b8f708f
-        computeOrder: 1
+        computeOrder: 4
         position:
           serializedVersion: 2
           x: 376.82608

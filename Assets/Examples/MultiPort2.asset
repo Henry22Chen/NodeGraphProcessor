@@ -18,8 +18,9 @@ MonoBehaviour:
   - rid: 3729079590015467860
   - rid: 3729079590015467861
   - rid: 3729079590015467862
+  - rid: 3729079632048161233
   edges:
-  - GUID: 0c62cdb9-c3bc-4fbe-97c2-00b86ecace64
+  - GUID: ffc43740-60f3-408a-ad5e-540cb8bfe0c0
     owner: {fileID: 11400000}
     inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
     outputNodeGUID: dad63bae-fb0e-495e-97a4-cfcc6f40b0c4
@@ -27,13 +28,29 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 0
     outputPortIdentifier: 
-  - GUID: 1297d805-e563-4395-a15d-0874bfb0a848
+  - GUID: 813d2019-ad55-4d84-aea2-25e78dc0c815
     owner: {fileID: 11400000}
-    inputNodeGUID: 70ba29bb-8952-42c4-a417-d522dc5de308
-    outputNodeGUID: 4870a082-99ce-4796-a0ed-0b7679b3b75c
+    inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
+    outputNodeGUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
+    inputFieldName: inputs
+    outputFieldName: output
+    inputPortIdentifier: 1
+    outputPortIdentifier: 
+  - GUID: c108d11f-e184-405d-836a-a8c18a69aa02
+    owner: {fileID: 11400000}
+    inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
+    outputNodeGUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
     inputFieldName: inputs
     outputFieldName: output
     inputPortIdentifier: 2
+    outputPortIdentifier: 
+  - GUID: 0f254b80-5926-4e69-8f12-41188d12e109
+    owner: {fileID: 11400000}
+    inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
+    outputNodeGUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
+    inputFieldName: inputs
+    outputFieldName: output
+    inputPortIdentifier: 3
     outputPortIdentifier: 
   groups: []
   stackNodes: []
@@ -62,8 +79,8 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: -63, y: -59, z: 0}
-  scale: {x: 1.3225, y: 1.3225, z: 1}
+  position: {x: 28, y: 19, z: 0}
+  scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
     RefIds:
@@ -72,14 +89,14 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 70ba29bb-8952-42c4-a417-d522dc5de308
-        computeOrder: 1
+        computeOrder: 0
         position:
           serializedVersion: 2
-          x: 623
-          y: 116
-          width: 111
-          height: 149
-        expanded: 0
+          x: 765.60016
+          y: 136.70001
+          width: 115
+          height: 147
+        expanded: 1
         debug: 0
         nodeLock: 0
         output: 0
@@ -88,7 +105,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 4870a082-99ce-4796-a0ed-0b7679b3b75c
-        computeOrder: 0
+        computeOrder: 1
         position:
           serializedVersion: 2
           x: 234
@@ -105,19 +122,19 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
-        computeOrder: 3
+        computeOrder: 4
         position:
           serializedVersion: 2
-          x: 423
-          y: 283
-          width: 129
-          height: 101
-        expanded: 0
+          x: 499.50006
+          y: 178.99997
+          width: 133
+          height: 123
+        expanded: 1
         debug: 0
         nodeLock: 0
         inputs: []
         outputs: []
-        portCount: 2
+        portCount: 5
     - rid: 3729079590015467862
       type: {class: FloatNode, ns: , asm: Assembly-CSharp}
       data:
@@ -126,10 +143,27 @@ MonoBehaviour:
         computeOrder: 2
         position:
           serializedVersion: 2
-          x: 244
-          y: 335
-          width: 73
-          height: 101
+          x: 234.00003
+          y: 335.00003
+          width: 102
+          height: 99
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 0
+        input: 0
+    - rid: 3729079632048161233
+      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
+        computeOrder: 3
+        position:
+          serializedVersion: 2
+          x: 285.00003
+          y: 522.40204
+          width: 102
+          height: 99
         expanded: 0
         debug: 0
         nodeLock: 0

@@ -11,8 +11,10 @@ public class VectorNode : BaseNode
 	[Output(name = "Out")]
 	public Vector4				output;
 	
-	[Input(name = "In"), SerializeField]
+	[Input(name = "In"), ShowAsDrawer]
 	public Vector4				input;
+
+    public bool testValue;
 
 	public override string		name => "Vector";
 
@@ -34,7 +36,12 @@ public class VectorNode : BaseNode
     }
     protected override void Process()
 	{
-		output = input;
+        TryReadInputValue(0, ref input);
+        TryReadInputValue(1, ref input.x);
+        TryReadInputValue(2, ref input.y);
+        TryReadInputValue(3, ref input.z);
+        TryReadInputValue(4, ref input.w);
+        output = input;
 	}
     protected override bool TryGetOutputValue<T>(int index, out T value)
     {

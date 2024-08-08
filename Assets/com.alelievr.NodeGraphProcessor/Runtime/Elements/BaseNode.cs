@@ -274,6 +274,11 @@ namespace GraphProcessor
 				foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
 				{
 					var nodeField = nodeFields[key.Name];
+					AddPort(nodeField.input, nodeField.fieldName, new PortData { acceptMultipleEdges = nodeField.isMultiple, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
+				}
+                /*foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+				{
+					var nodeField = nodeFields[key.Name];
 
 					if (HasCustomBehavior(nodeField))
 					{
@@ -284,8 +289,8 @@ namespace GraphProcessor
 						// If we don't have a custom behavior on the node, we just have to create a simple port
 						AddPort(nodeField.input, nodeField.fieldName, new PortData { acceptMultipleEdges = nodeField.isMultiple, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
 					}
-				}
-			}
+				}*/
+            }
 		}
 
 		/// <summary>
@@ -576,32 +581,40 @@ namespace GraphProcessor
 				nodeFields[field.Name] = new NodeFieldInformation(field, name, input, isMultiple, tooltip, vertical != null, null);
 			}
 
-			foreach (var method in methods)
-			{
-				var customPortBehaviorAttribute = method.GetCustomAttribute< CustomPortBehaviorAttribute >();
-				CustomPortBehaviorDelegate behavior = null;
+            foreach (var method in methods)
+            {
+                var customPortBehaviorAttribute = method.GetCustomAttribute<CustomPortBehaviorAttribute>();
+                CustomPortBehaviorDelegate behavior = null;
 
-				if (customPortBehaviorAttribute == null)
-					continue ;
+                if (customPortBehaviorAttribute == null)
+                    continue;
 
-				// Check if custom port behavior function is valid
-				try {
-					var referenceType = typeof(CustomPortBehaviorDelegate);
-					behavior = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
-				} catch {
-					Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
-				}
+                // Check if custom port behavior function is valid
+                try
+                {
+                    var referenceType = typeof(CustomPortBehaviorDelegate);
+                    behavior = (CustomPortBehaviorDelegate)Delegate.CreateDelegate(referenceType, this, method, true);
+                }
+                catch
+                {
+                    Debug.LogError("The function " + method + " cannot be converted to the required delegate format: " + typeof(CustomPortBehaviorDelegate));
+                }
 
-				if (nodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
-					nodeFields[customPortBehaviorAttribute.fieldName].behavior = behavior;
-				else
-					Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
-			}
-		}
+                if (nodeFields.ContainsKey(customPortBehaviorAttribute.fieldName))
+                    nodeFields[customPortBehaviorAttribute.fieldName].behavior = behavior;
+                else
+                    Debug.LogError("Invalid field name for custom port behavior: " + method + ", " + customPortBehaviorAttribute.fieldName);
+            }
+        }
 
 		#endregion
 
 		#region Events and Processing
+
+		public virtual void OnFieldValueChanged(string fieldName)
+		{
+
+		}
 
 		public void OnEdgeConnected(SerializableEdge edge)
 		{
@@ -639,6 +652,7 @@ namespace GraphProcessor
 
 		protected virtual bool TryGetOutputValue<T>(int index, out T value)
 		{
+			Debug.LogWarning($"{GetType()} didn't override TryGetOutputValue, returning default value");
 			value = default(T);
 			return false;
 		}

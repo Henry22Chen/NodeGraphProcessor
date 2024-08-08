@@ -876,6 +876,7 @@ namespace GraphProcessor
 
 			element.RegisterValueChangeCallback(e => {
 				UpdateFieldVisibility(field.Name, field.GetValue(nodeTarget));
+				nodeTarget?.OnFieldValueChanged(field.Name);
 				valueChangedCallback?.Invoke();
 				NotifyNodeChanged();
 			});
@@ -948,8 +949,13 @@ namespace GraphProcessor
 
 			var element = new PropertyField(FindSerializedProperty(field.Name));
 			element.Bind(owner.serializedGraph);
+			element.RegisterValueChangeCallback((evt) =>
+			{
+				nodeTarget?.OnFieldValueChanged(field.Name);
+				NotifyNodeChanged();
+            });
 
-			if (element != null)
+            if (element != null)
 			{
 				settingsContainer.Add(element);
 				element.name = field.Name;
