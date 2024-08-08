@@ -26,6 +26,7 @@ namespace GraphProcessor
 		public BaseGraphView					owner { private set; get; }
 
 		protected Dictionary< string, List< PortView > > portsPerFieldName = new Dictionary< string, List< PortView > >();
+		protected Dictionary<NodePort, PortView> portsPerNodePort = new Dictionary<NodePort, PortView>();
 
         public VisualElement 					controlsContainer;
 		protected VisualElement					debugContainer;
@@ -117,12 +118,12 @@ namespace GraphProcessor
 
 			foreach (var inputPort in nodeTarget.inputPorts)
 			{
-				AddPort(inputPort.fieldInfo, Direction.Input, listener, inputPort.portData);
+				AddPort(inputPort, Direction.Input, listener, inputPort.portData);
 			}
 
 			foreach (var outputPort in nodeTarget.outputPorts)
 			{
-				AddPort(outputPort.fieldInfo, Direction.Output, listener, outputPort.portData);
+				AddPort(outputPort, Direction.Output, listener, outputPort.portData);
 			}
 		}
 
@@ -352,10 +353,16 @@ namespace GraphProcessor
 			});
 		}
 
-
-		public PortView AddPort(FieldInfo fieldInfo, Direction direction, BaseEdgeConnectorListener listener, PortData portData)
+		public PortView GetPortViewFromNodePort(NodePort port)
 		{
-			PortView p = CreatePortView(direction, fieldInfo, portData, listener);
+			portsPerNodePort.TryGetValue(port, out var view);
+			return view;
+		}
+
+
+		public PortView AddPort(NodePort port, Direction direction, BaseEdgeConnectorListener listener, PortData portData)
+		{
+			PortView p = CreatePortView(direction, port, portData, listener);
 
 			if (p.direction == Direction.Input)
 			{
@@ -377,6 +384,7 @@ namespace GraphProcessor
 			}
 
 			p.Initialize(this, portData?.displayName);
+			portsPerNodePort[port] = p;
 
 			List< PortView > ports;
 			portsPerFieldName.TryGetValue(p.fieldName, out ports);
@@ -390,8 +398,8 @@ namespace GraphProcessor
 			return p;
 		}
 
-        protected virtual PortView CreatePortView(Direction direction, FieldInfo fieldInfo, PortData portData, BaseEdgeConnectorListener listener)
-        	=> PortView.CreatePortView(direction, fieldInfo, portData, listener);
+        protected virtual PortView CreatePortView(Direction direction, NodePort port, PortData portData, BaseEdgeConnectorListener listener)
+        	=> PortView.CreatePortView(direction, port, portData, listener);
 
         public void InsertPort(PortView portView, int index)
 		{
@@ -1087,7 +1095,7 @@ namespace GraphProcessor
 				if (!portViews.Any(pv => p.portData.identifier == pv.portData.identifier))
 				{
 					Direction portDirection = nodeTarget.IsFieldInput(p.fieldName) ? Direction.Input : Direction.Output;
-					var pv = AddPort(p.fieldInfo, portDirection, listener, p.portData);
+					var pv = AddPort(p, portDirection, listener, p.portData);
 					portViewList.Add(pv);
 				}
 			}

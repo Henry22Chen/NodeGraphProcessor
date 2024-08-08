@@ -19,6 +19,7 @@ namespace GraphProcessor
 		public event Action< PortView, Edge >	OnConnected;
 		public event Action< PortView, Edge >	OnDisconnected;
 
+		protected NodePort port;
 		protected FieldInfo		fieldInfo;
 		protected BaseEdgeConnectorListener	listener;
 
@@ -27,13 +28,15 @@ namespace GraphProcessor
 		List< EdgeView >		edges = new List< EdgeView >();
 
 		public int connectionCount => edges.Count;
+		public NodePort Port => port;
 
 		readonly string portStyle = "GraphProcessorStyles/PortView";
 
-        protected PortView(Direction direction, FieldInfo fieldInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
-            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? fieldInfo.FieldType)
+        protected PortView(Direction direction, NodePort port, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
+            : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? port.fieldInfo.FieldType)
 		{
-			this.fieldInfo = fieldInfo;
+			this.port = port;
+			this.fieldInfo = port.fieldInfo;
 			this.listener = edgeConnectorListener;
 			this.portType = portData.displayType ?? fieldInfo.FieldType;
 			this.portData = portData;
@@ -53,9 +56,9 @@ namespace GraphProcessor
 			this.tooltip = portData.tooltip;
 		}
 
-		public static PortView CreatePortView(Direction direction, FieldInfo fieldInfo, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
+		public static PortView CreatePortView(Direction direction, NodePort port, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
 		{
-			var pv = new PortView(direction, fieldInfo, portData, edgeConnectorListener);
+			var pv = new PortView(direction, port, portData, edgeConnectorListener);
 			pv.m_EdgeConnector = new BaseEdgeConnector(edgeConnectorListener);
 			pv.AddManipulator(pv.m_EdgeConnector);
 

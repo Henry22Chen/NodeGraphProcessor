@@ -160,10 +160,13 @@ namespace GraphProcessor
 			if (edge.inputPort.customPortIOMethod != null || edge.outputPort.customPortIOMethod != null)
 				return ;
 
-			PushDataDelegate edgeDelegate = CreatePushDataDelegateForEdge(edge);
+			if (owner.propagateValues)
+			{
+				PushDataDelegate edgeDelegate = CreatePushDataDelegateForEdge(edge);
 
-			if (edgeDelegate != null)
-				pushDataDelegates[edge] = edgeDelegate;
+				if (edgeDelegate != null)
+					pushDataDelegates[edge] = edgeDelegate;
+			}
 		}
 
 		PushDataDelegate CreatePushDataDelegateForEdge(SerializableEdge edge)

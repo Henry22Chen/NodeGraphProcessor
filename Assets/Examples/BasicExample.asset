@@ -40,7 +40,7 @@ MonoBehaviour:
   - rid: 23
   - rid: 3729079590015467925
   - rid: 3729079590015467991
-  - rid: 3729079590015468040
+  - rid: 3729079632048160820
   edges:
   - GUID: 04cee6c7-b233-40e1-b41a-31f6093f1482
     owner: {fileID: 11400000}
@@ -154,14 +154,14 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 03a4f4c6-d0fb-403d-bc69-f32237e8e15e
+  - GUID: a44bbdaf-f7cd-4c76-bf6d-7d355f5e6009
     owner: {fileID: 11400000}
     inputNodeGUID: a96c9f2d-98f9-4662-9fa6-20c77a144932
-    outputNodeGUID: da4c6918-c372-45e2-8b35-23cb72e6456f
+    outputNodeGUID: 4d4af3d6-83db-4fdb-8cbe-5d88ae870d71
     inputFieldName: input
     outputFieldName: output
     inputPortIdentifier: 
-    outputPortIdentifier: output
+    outputPortIdentifier: 
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
@@ -347,7 +347,7 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 375, y: -361, z: 0}
+  position: {x: 597, y: -418, z: 0}
   scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
@@ -402,7 +402,7 @@ MonoBehaviour:
         expanded: 0
         debug: 1
         nodeLock: 0
-        output: 0
+        output: 10
     - rid: 3
       type: {class: SubNode, ns: , asm: Assembly-CSharp}
       data:
@@ -828,17 +828,15 @@ MonoBehaviour:
         computeOrder: 25
         position:
           serializedVersion: 2
-          x: -19.999987
-          y: 888.5001
+          x: -40.99998
+          y: 938.00006
           width: 102
           height: 99
         expanded: 0
         debug: 0
         nodeLock: 0
-        output:
-          SerializedValue: 0
-        input:
-          SerializedValue: 633
+        output: 0
+        input: 0
     - rid: 3729079590015467991
       type: {class: Float2Node, ns: , asm: Assembly-CSharp}
       data:
@@ -847,31 +845,29 @@ MonoBehaviour:
         computeOrder: 26
         position:
           serializedVersion: 2
-          x: 127.999985
-          y: 938.0001
+          x: 167.09999
+          y: 958.7002
           width: 102
           height: 99
         expanded: 1
         debug: 0
         nodeLock: 0
-        output:
-          SerializedValue: 0
-        input:
-          SerializedValue: 633
-    - rid: 3729079590015468040
-      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+        output: 0
+        input: 0
+    - rid: 3729079632048160820
+      type: {class: VectorNode, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: da4c6918-c372-45e2-8b35-23cb72e6456f
+        GUID: 4d4af3d6-83db-4fdb-8cbe-5d88ae870d71
         computeOrder: 24
         position:
           serializedVersion: 2
-          x: -183.8
-          y: 919.5001
-          width: 91
-          height: 37
+          x: -163.00005
+          y: 709.15015
+          width: 102
+          height: 171
         expanded: 0
         debug: 0
         nodeLock: 0
-        parameterGUID: eb80df62-f248-4ec9-afd4-f9ed08bfaa16
-        accessor: 0
+        output: {x: 111, y: 0, z: 0, w: 0}
+        input: {x: 111, y: 0, z: 0, w: 0}

@@ -29,7 +29,7 @@ public class Float2Node : BaseNode
 
     public override string name => "Float";
 
-    protected override bool propagateValues => false;
+    public override bool propagateValues => false;
 
     protected override void Process()
     {
