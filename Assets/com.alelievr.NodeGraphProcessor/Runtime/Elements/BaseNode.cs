@@ -132,7 +132,10 @@ namespace GraphProcessor
 		/// </summary>
 		public bool					createdWithinGroup {get; internal set; } = false;
 
-		[NonSerialized]
+		protected virtual bool hasCustomInputs => false;
+        protected virtual bool hasCustomOutputs => false;
+
+        [NonSerialized]
 		internal Dictionary< string, NodeFieldInformation >	nodeFields = new Dictionary< string, NodeFieldInformation >();
 
 		[NonSerialized]
@@ -269,25 +272,46 @@ namespace GraphProcessor
 		public virtual void InitializePorts()
 		{
 			InitializeCustomPortTypeMethods();
-			if (!TryGetCustomPorts())
+			bool allCustom = true;
+			if (hasCustomInputs)
 			{
-				/*foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+				int identifier = 0;
+				foreach (var port in GetCustomInputPorts())
+				{
+					port.identifier = identifier++;
+					AddPort(true, port);
+				}
+			}
+			else
+				allCustom = false;
+			if (hasCustomOutputs)
+			{
+                int identifier = 1000;
+                foreach (var port in GetCustomOutputPorts())
+				{
+                    port.identifier = identifier++;
+                    AddPort(false, port);
+				}
+			}
+            else
+                allCustom = false;
+            if (!allCustom)
+			{
+				foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
 				{
 					var nodeField = nodeFields[key.Name];
-					AddPort(nodeField.input, nodeField.fieldName, new PortData { acceptMultipleEdges = nodeField.isMultiple, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
-				}*/
-                foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
-				{
-					var nodeField = nodeFields[key.Name];
-
-					if (HasCustomBehavior(nodeField))
+					if (nodeField.input && hasCustomInputs)
+						continue;
+					if (!nodeField.input && hasCustomOutputs)
+						continue;
+					/*if (HasCustomBehavior(nodeField))
 					{
 						UpdatePortsForField(nodeField.fieldName, sendPortUpdatedEvent: false);
 					}
-					else
+					else*/
 					{
 						// If we don't have a custom behavior on the node, we just have to create a simple port
-						AddPort(nodeField.input, nodeField.fieldName, new PortData { acceptMultipleEdges = nodeField.isMultiple, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
+						AddPort(nodeField.input, new PortData { acceptMultipleEdges = nodeField.isMultiple, isField = true, fieldName = nodeField.fieldName, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
 					}
 				}
             }
@@ -407,7 +431,7 @@ namespace GraphProcessor
 				// Guard using the port identifier so we don't duplicate identifiers
 				if (port == null)
 				{
-					AddPort(fieldInfo.input, fieldName, portData);
+					AddPort(fieldInfo.input, portData);
 					changed = true;
 				}
 				else
@@ -738,9 +762,11 @@ namespace GraphProcessor
 		#endregion
 
 		#region API and utils
-		protected virtual bool TryGetCustomPorts() => false;
 
-		protected void AddPort(bool input, string fieldName, Type displayType, string displayName = null, bool vertical = false, bool allowMultiple = false, string tooltip = null)
+        protected virtual IEnumerable<PortData> GetCustomInputPorts() { yield break; }
+        protected virtual IEnumerable<PortData> GetCustomOutputPorts() { yield break; }
+
+        protected void AddPort(bool input, string fieldName, Type displayType, string displayName = null, bool vertical = false, bool allowMultiple = false, string tooltip = null)
 		{
 			if (string.IsNullOrEmpty(displayName))
 				displayName = fieldName;
@@ -753,8 +779,29 @@ namespace GraphProcessor
 				vertical = vertical,
 				identifier = -1
 			};
-			AddPort(input, fieldName, portData);
+			AddPort(input, portData);
         }
+
+		protected PortData BuildCustomPort(string fieldName, Type displayType, string displayName = null, bool isField = true, bool allowMultiple = false, string tooltip = null, bool vertical = false)
+		{
+			if (string.IsNullOrEmpty(displayName))
+				displayName = fieldName;
+			//Guard the invalid combination
+			if (isField && string.IsNullOrEmpty(fieldName))
+				isField = false;
+			PortData portData = new PortData
+			{
+				isField = isField,
+				acceptMultipleEdges = allowMultiple,
+				fieldName = fieldName,
+				displayName = displayName,
+				displayType = displayType,
+				tooltip = tooltip,
+				vertical = vertical,
+				identifier = -1
+			};
+			return portData;
+		}
 
         /// <summary>
         /// Add a port
@@ -762,8 +809,9 @@ namespace GraphProcessor
         /// <param name="input">is input port</param>
         /// <param name="fieldName">C# field name</param>
         /// <param name="portData">Data of the port</param>
-        protected void AddPort(bool input, string fieldName, PortData portData)
+        protected void AddPort(bool input, PortData portData)
 		{
+			var fieldName = portData.fieldName;
 			// Fixup port data info if needed:
 			if (portData.displayType == null)
 			{

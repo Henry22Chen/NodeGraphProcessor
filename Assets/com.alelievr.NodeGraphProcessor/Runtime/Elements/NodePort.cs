@@ -24,6 +24,14 @@ namespace GraphProcessor
 		/// </summary>
 		public string	displayName;
 		/// <summary>
+		/// Associate this port to the specific field
+		/// </summary>
+		public string fieldName;
+		/// <summary>
+		/// Specify if the port represents the associated field itself
+		/// </summary>
+		public bool isField;
+		/// <summary>
 		/// The type that will be used for coloring with the type stylesheet
 		/// </summary>
 		public Type		displayType;
@@ -130,9 +138,12 @@ namespace GraphProcessor
 			this.fieldOwner = fieldOwner;
 			this.index = index;
 
-			fieldInfo = fieldOwner.GetType().GetField(
-				fieldName,
-				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			if (!string.IsNullOrEmpty(fieldName))
+			{
+				fieldInfo = fieldOwner.GetType().GetField(
+					fieldName,
+					BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			}
 			customPortIOMethod = CustomPortIO.GetCustomPortMethod(owner.GetType(), fieldName);
 		}
 
@@ -282,17 +293,21 @@ namespace GraphProcessor
 		/// </summary>
 		public void ResetToDefault()
 		{
-			// Clear lists, set classes to null and struct to default value.
-			if (typeof(IList).IsAssignableFrom(fieldInfo.FieldType))
-				(fieldInfo.GetValue(fieldOwner) as IList)?.Clear();
-			else if (fieldInfo.FieldType.GetTypeInfo().IsClass)
-				fieldInfo.SetValue(fieldOwner, null);
-			else
+			if (fieldInfo != null)
 			{
-				try
+				// Clear lists, set classes to null and struct to default value.
+				if (typeof(IList).IsAssignableFrom(fieldInfo.FieldType))
+					(fieldInfo.GetValue(fieldOwner) as IList)?.Clear();
+				else if (fieldInfo.FieldType.GetTypeInfo().IsClass)
+					fieldInfo.SetValue(fieldOwner, null);
+				else
 				{
-					fieldInfo.SetValue(fieldOwner, Activator.CreateInstance(fieldInfo.FieldType));
-				} catch {} // Catch types that don't have any constructors
+					try
+					{
+						fieldInfo.SetValue(fieldOwner, Activator.CreateInstance(fieldInfo.FieldType));
+					}
+					catch { } // Catch types that don't have any constructors
+				}
 			}
 		}
 

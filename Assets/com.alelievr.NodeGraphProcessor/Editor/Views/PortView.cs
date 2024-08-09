@@ -10,7 +10,7 @@ namespace GraphProcessor
 {
 	public class PortView : Port
 	{
-		public string				fieldName => fieldInfo.Name;
+		public string				fieldName => fieldInfo?.Name;
 		public Type					fieldType => fieldInfo.FieldType;
 		public new Type				portType;
         public BaseNodeView     	owner { get; private set; }
@@ -32,6 +32,14 @@ namespace GraphProcessor
 
 		readonly string portStyle = "GraphProcessorStyles/PortView";
 
+		public string GetPortName()
+		{
+			if (string.IsNullOrEmpty(portData.fieldName))
+				return $"port_{portData.identifier}";
+			else
+				return portData.fieldName;
+		}
+
         protected PortView(Direction direction, NodePort port, PortData portData, BaseEdgeConnectorListener edgeConnectorListener)
             : base(portData.vertical ? Orientation.Vertical : Orientation.Horizontal, direction, Capacity.Multi, portData.displayType ?? port.fieldInfo.FieldType)
 		{
@@ -40,7 +48,7 @@ namespace GraphProcessor
 			this.listener = edgeConnectorListener;
 			this.portType = portData.displayType ?? fieldInfo.FieldType;
 			this.portData = portData;
-			this.portName = fieldName;
+			this.portName = GetPortName();
 
 			styleSheets.Add(Resources.Load<StyleSheet>(portStyle));
 

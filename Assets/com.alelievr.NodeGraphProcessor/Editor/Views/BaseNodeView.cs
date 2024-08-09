@@ -27,6 +27,7 @@ namespace GraphProcessor
 
 		protected Dictionary< string, List< PortView > > portsPerFieldName = new Dictionary< string, List< PortView > >();
 		protected Dictionary<NodePort, PortView> portsPerNodePort = new Dictionary<NodePort, PortView>();
+		protected Dictionary<int, PortView> portsPerIdentifier = new Dictionary<int, PortView>();
 
         public VisualElement 					controlsContainer;
 		protected VisualElement					debugContainer;
@@ -348,9 +349,19 @@ namespace GraphProcessor
 
 		public PortView GetPortViewFromFieldName(string fieldName, int identifier)
 		{
-			return GetPortViewsFromFieldName(fieldName)?.FirstOrDefault(pv => {
-				return (pv.portData.identifier == identifier) || (pv.portData.identifier == -1 && identifier == -1);
-			});
+			if (string.IsNullOrEmpty(fieldName))
+			{
+				if (portsPerIdentifier.TryGetValue(identifier, out var view))
+					return view;
+				return null;
+			}
+			else
+			{
+				return GetPortViewsFromFieldName(fieldName)?.FirstOrDefault(pv =>
+				{
+					return (pv.portData.identifier == identifier) || (pv.portData.identifier == -1 && identifier == -1);
+				});
+			}
 		}
 
 		public PortView GetPortViewFromNodePort(NodePort port)
@@ -385,16 +396,21 @@ namespace GraphProcessor
 
 			p.Initialize(this, portData?.displayName);
 			portsPerNodePort[port] = p;
+			if (portData.identifier != -1)
+				portsPerIdentifier[portData.identifier] = p;
 
-			List< PortView > ports;
-			portsPerFieldName.TryGetValue(p.fieldName, out ports);
-			if (ports == null)
+			if (!string.IsNullOrEmpty(p.fieldName))
 			{
-				ports = new List< PortView >();
-				portsPerFieldName[p.fieldName] = ports;
+				List<PortView> ports;
+				portsPerFieldName.TryGetValue(p.fieldName, out ports);
+				if (ports == null)
+				{
+					ports = new List<PortView>();
+					portsPerFieldName[p.fieldName] = ports;
+				}
+				ports.Add(p);
 			}
-			ports.Add(p);
-
+			
 			return p;
 		}
 
@@ -964,10 +980,11 @@ namespace GraphProcessor
 
 		internal void OnPortConnected(PortView port)
 		{
-			if(port.direction == Direction.Input && inputContainerElement?.Q(port.fieldName) != null)
-				inputContainerElement.Q(port.fieldName).AddToClassList("empty");
+			string portName = port.GetPortName();
+			if(port.direction == Direction.Input && inputContainerElement?.Q(portName) != null)
+				inputContainerElement.Q(portName).AddToClassList("empty");
 			
-			if (hideElementIfConnected.TryGetValue(port.fieldName, out var elem))
+			if (hideElementIfConnected.TryGetValue(portName, out var elem))
 				elem.style.display = DisplayStyle.None;
 
 			onPortConnected?.Invoke(port);
@@ -975,11 +992,13 @@ namespace GraphProcessor
 
 		internal void OnPortDisconnected(PortView port)
 		{
-			if (port.direction == Direction.Input && inputContainerElement?.Q(port.fieldName) != null)
-			{
-				inputContainerElement.Q(port.fieldName).RemoveFromClassList("empty");
+            string portName = port.GetPortName();
 
-				if (nodeTarget.nodeFields.TryGetValue(port.fieldName, out var fieldInfo))
+            if (port.direction == Direction.Input && inputContainerElement?.Q(portName) != null)
+			{
+				inputContainerElement.Q(portName).RemoveFromClassList("empty");
+
+				if (nodeTarget.nodeFields.TryGetValue(portName, out var fieldInfo))
 				{
 					var valueBeforeConnection = GetInputFieldValue(fieldInfo.info);
 
@@ -990,7 +1009,7 @@ namespace GraphProcessor
 				}
 			}
 			
-			if (hideElementIfConnected.TryGetValue(port.fieldName, out var elem))
+			if (hideElementIfConnected.TryGetValue(portName, out var elem))
 				elem.style.display = DisplayStyle.Flex;
 
 			onPortDisconnected?.Invoke(port);

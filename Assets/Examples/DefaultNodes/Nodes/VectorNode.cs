@@ -19,20 +19,25 @@ public class VectorNode : BaseNode
 	public override string		name => "Vector";
 
     public override bool propagateValues => false;
+    protected override bool hasCustomInputs => true;
+    protected override bool hasCustomOutputs => true;
 
-    protected override bool TryGetCustomPorts()
+    protected override IEnumerable<PortData> GetCustomInputPorts()
     {
-        AddPort(true, nameof(input), typeof(Vector4), "In");
-        AddPort(true, nameof(input), typeof(float), "x");
-        AddPort(true, nameof(input), typeof(float), "y");
-        AddPort(true, nameof(input), typeof(float), "z");
-        AddPort(true, nameof(input), typeof(float), "w");
-        AddPort(false, nameof(output), typeof(Vector4), "Out");
-        AddPort(false, nameof(output), typeof(float), "x");
-        AddPort(false, nameof(output), typeof(float), "y");
-        AddPort(false, nameof(output), typeof(float), "z");
-        AddPort(false, nameof(output), typeof(float), "w");
-        return true;
+        yield return BuildCustomPort(nameof(input), typeof(Vector4), "In");
+        yield return BuildCustomPort(nameof(input), typeof(Vector4), "x", false);
+        yield return BuildCustomPort(nameof(input), typeof(Vector4), "y", false);
+        yield return BuildCustomPort(nameof(input), typeof(Vector4), "z", false);
+        yield return BuildCustomPort(nameof(input), typeof(Vector4), "w", false);
+    }
+
+    protected override IEnumerable<PortData> GetCustomOutputPorts()
+    {
+        yield return BuildCustomPort(nameof(output), typeof(Vector4), "Out", true, true);
+        yield return BuildCustomPort(nameof(output), typeof(Vector4), "x", false, true);
+        yield return BuildCustomPort(nameof(output), typeof(Vector4), "y", false, true);
+        yield return BuildCustomPort(nameof(output), typeof(Vector4), "z", false, true);
+        yield return BuildCustomPort(nameof(output), typeof(Vector4), "w", false, true);
     }
     protected override void Process()
 	{
