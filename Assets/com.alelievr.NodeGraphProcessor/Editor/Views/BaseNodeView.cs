@@ -698,7 +698,40 @@ namespace GraphProcessor
 				.Where(f => f.DeclaringType != typeof(BaseNode));
 
 			fields = nodeTarget.OverrideFieldOrder(fields).Reverse();
+			foreach(var port in nodeTarget.inputPorts)
+			{
+				if(port.fieldInfo == null || !port.portData.isField)
+				{
+                    AddEmptyField(port.portData.identifier);
+                }
+				else
+				{
+					var field = port.fieldInfo;
+                    bool serializeField = field.GetCustomAttribute(typeof(SerializeField)) != null;
+					if((!field.IsPublic && !serializeField) || field.IsNotSerialized)
+					{
+						AddEmptyField(field, fromInspector);
+						continue;
+					}
 
+                    bool showAsDrawer = !fromInspector && field.GetCustomAttribute(typeof(ShowAsDrawer)) != null;
+					if (showAsDrawer)
+					{
+                        string displayName = ObjectNames.NicifyVariableName(field.Name);
+
+                        var inspectorNameAttribute = field.GetCustomAttribute<InspectorNameAttribute>();
+                        if (inspectorNameAttribute != null)
+                            displayName = inspectorNameAttribute.displayName;
+
+                        var elem = AddControlField(field, displayName, true);
+                        hideElementIfConnected[field.Name] = elem;
+                    }
+					else
+					{
+                        AddEmptyField(field, fromInspector);
+                    }
+                }
+			}
 			foreach (var field in fields)
 			{
 				//skip if the field is a node setting
@@ -716,9 +749,11 @@ namespace GraphProcessor
 					continue;
 				}
 
-				//skip if the field is an input/output and not marked as SerializedField
 				bool hasInputAttribute         = field.GetCustomAttribute(typeof(InputAttribute)) != null;
-				bool hasInputOrOutputAttribute = hasInputAttribute || field.GetCustomAttribute(typeof(OutputAttribute)) != null;
+				if (hasInputAttribute) // input ports are already handled;
+					continue;
+                //skip if the field is an input/output and not marked as SerializedField
+                bool hasInputOrOutputAttribute = hasInputAttribute || field.GetCustomAttribute(typeof(OutputAttribute)) != null;
 				bool showAsDrawer			   = !fromInspector && field.GetCustomAttribute(typeof(ShowAsDrawer)) != null;
 				if (!serializeField && hasInputOrOutputAttribute && !showAsDrawer)
 				{
@@ -770,8 +805,15 @@ namespace GraphProcessor
 			titleContainer.style.borderBottomColor = new StyleColor(color);
 			titleContainer.style.borderBottomWidth = new StyleFloat(color.a > 0 ? 5f : 0f);
 		}
-		
-		private void AddEmptyField(FieldInfo field, bool fromInspector)
+        private void AddEmptyField(int identifier)
+        {
+            var box = new VisualElement { name = $"port_{identifier}" };
+            box.AddToClassList("port-input-element");
+            box.AddToClassList("empty");
+            inputContainerElement.Add(box);
+        }
+
+        private void AddEmptyField(FieldInfo field, bool fromInspector)
 		{
 			if (field.GetCustomAttribute(typeof(InputAttribute)) == null || fromInspector)
 				return;
