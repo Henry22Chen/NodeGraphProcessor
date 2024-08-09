@@ -1214,7 +1214,7 @@ namespace GraphProcessor
 						IEnumerable< PortView > portViewsList = portViewPerFieldName;
 						if (portPerFieldName.Count() != portViewPerFieldName.Count())
 							portViewsList = SyncPortCounts(portPerFieldName, portViewPerFieldName);
-						SyncPortOrder(portPerFieldName, portViewsList);
+						//SyncPortOrder(portPerFieldName, portViewsList);
 						// We don't care about the result, we just iterate over port and portView
 						return "";
 					}).ToList();
