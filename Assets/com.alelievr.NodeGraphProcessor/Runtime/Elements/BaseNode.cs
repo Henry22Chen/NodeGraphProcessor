@@ -517,7 +517,7 @@ namespace GraphProcessor
 			return false;
 		}
 
-		protected bool TryConvertValue<T, T2>(ref T value, out T2 output)
+		public static bool TryConvertValue<T, T2>(ref T value, out T2 output)
 		{
 			if (value is T2 finalValue)
 			{
@@ -530,7 +530,13 @@ namespace GraphProcessor
 				return false;
 			}
 		}
-		protected bool TryReadInputValue<T>(int index, ref T field, int edgeIdx = 0)
+
+        internal bool TryReadInputValueInternal<T>(int index, out T value, int edgeIndex)
+        {
+			value = default;
+            return TryReadInputValue(index, ref value, edgeIndex);
+        }
+        protected bool TryReadInputValue<T>(int index, ref T field, int edgeIdx = 0)
 		{
 			var port = inputPorts[index];
 			var edges = port.GetEdges();

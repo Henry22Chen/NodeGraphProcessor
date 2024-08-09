@@ -204,6 +204,12 @@ namespace GraphProcessor
 				}
 			}
 		}
+
+		public bool TryReadInputValue<T>(out T field, int edgeIdx = 0)
+		{
+			return owner.TryReadInputValueInternal(index, out field, edgeIdx);
+
+        }
 	}
 
 	/// <summary>

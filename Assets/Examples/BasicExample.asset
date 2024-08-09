@@ -48,6 +48,9 @@ MonoBehaviour:
   - rid: 3729079658954621206
   - rid: 3729079658954621207
   - rid: 3729079658954621224
+  - rid: 3729079658954621233
+  - rid: 3729079658954621234
+  - rid: 3729079658954621354
   edges:
   - GUID: e83acc94-1adc-4b71-9098-68669183f86c
     owner: {fileID: 11400000}
@@ -161,6 +164,30 @@ MonoBehaviour:
     outputFieldName: output
     inputPortIdentifier: 0
     outputPortIdentifier: 1001
+  - GUID: 5d635893-be89-496d-8f51-40704e99296d
+    owner: {fileID: 11400000}
+    inputNodeGUID: e065574a-4931-41d5-8608-516dbc083aa5
+    outputNodeGUID: 1820e298-8635-4d0a-a8c5-fe25cbfadd9d
+    inputFieldName: input
+    outputFieldName: 
+    inputPortIdentifier: -1
+    outputPortIdentifier: 1000
+  - GUID: 5bf7bafb-ff5c-43d1-8347-4e51a5d5a4d5
+    owner: {fileID: 11400000}
+    inputNodeGUID: 1820e298-8635-4d0a-a8c5-fe25cbfadd9d
+    outputNodeGUID: 79c6623a-5500-48bc-9b37-d8b9d9fc47fc
+    inputFieldName: 
+    outputFieldName: 
+    inputPortIdentifier: 2
+    outputPortIdentifier: 1000
+  - GUID: b5b839e5-9b56-4d3f-a178-26304090bee6
+    owner: {fileID: 11400000}
+    inputNodeGUID: fcb537d0-0fbc-4cde-bc07-c0400b9a0f95
+    outputNodeGUID: 3adc46b9-f898-48ba-975d-b1a248c4c4e0
+    inputFieldName: 
+    outputFieldName: output
+    inputPortIdentifier: 0
+    outputPortIdentifier: -1
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
@@ -237,97 +264,8 @@ MonoBehaviour:
         Culture=neutral, PublicKeyToken=null
   exposedParameters:
   - rid: 25
-  serializedParameterList:
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
-  - guid: 
-    name: 
-    type: 
-    serializedValue:
-      serializedType: 
-      serializedName: 
-      serializedValue: 
-    input: 1
-    settings:
-      rid: -2
+  - rid: 3729079658954621237
+  - rid: 3729079658954621348
   stickyNotes:
   - position:
       serializedVersion: 2
@@ -346,13 +284,11 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 781, y: -364, z: 0}
-  scale: {x: 0.65751624, y: 0.65751624, z: 1}
+  position: {x: 488, y: -841, z: 0}
+  scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 0
       type: {class: ColorNode, ns: , asm: Assembly-CSharp}
       data:
@@ -777,7 +713,7 @@ MonoBehaviour:
         input: 1
         settings:
           rid: 27
-        val: 0
+        val: 333
     - rid: 27
       type: {class: FloatParameter/FloatSettings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
@@ -944,7 +880,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 3a9e569f-2781-4137-818d-024c250963e6
-        computeOrder: 32
+        computeOrder: 33
         position:
           serializedVersion: 2
           x: 149
@@ -961,7 +897,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 7a2eea93-00ad-43f3-bccd-1507470eee91
-        computeOrder: 33
+        computeOrder: 34
         position:
           serializedVersion: 2
           x: 149
@@ -978,7 +914,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 1820e298-8635-4d0a-a8c5-fe25cbfadd9d
-        computeOrder: 31
+        computeOrder: 32
         position:
           serializedVersion: 2
           x: -78.99999
@@ -988,4 +924,98 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        portCount: 3
+        portCount: 4
+    - rid: 3729079658954621233
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: 79c6623a-5500-48bc-9b37-d8b9d9fc47fc
+        computeOrder: 31
+        position:
+          serializedVersion: 2
+          x: -387.50006
+          y: 1491.0002
+          width: 91
+          height: 37
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterGUID: eb80df62-f248-4ec9-afd4-f9ed08bfaa16
+        accessor: 0
+    - rid: 3729079658954621234
+      type: {class: Float2Node, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: e065574a-4931-41d5-8608-516dbc083aa5
+        computeOrder: 35
+        position:
+          serializedVersion: 2
+          x: 145.00005
+          y: 1662.5062
+          width: 102
+          height: 99
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        output: 333
+        input: 333
+    - rid: 3729079658954621237
+      type: {class: LongParameter, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        guid: a130763c-82f2-4e5c-8838-5c82d2611786
+        name: New Long
+        type: 
+        serializedValue:
+          serializedType: 
+          serializedName: 
+          serializedValue: 
+        input: 1
+        settings:
+          rid: 3729079658954621238
+        val: 0
+    - rid: 3729079658954621238
+      type: {class: ExposedParameter/Settings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        isHidden: 0
+        expanded: 1
+        guid: a130763c-82f2-4e5c-8838-5c82d2611786
+    - rid: 3729079658954621348
+      type: {class: FloatParameter, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        guid: e3d4b22f-14b4-4952-9e9d-4f7ef26a91fe
+        name: New Float 0
+        type: 
+        serializedValue:
+          serializedType: 
+          serializedName: 
+          serializedValue: 
+        input: 1
+        settings:
+          rid: 3729079658954621349
+        val: 0
+    - rid: 3729079658954621349
+      type: {class: FloatParameter/FloatSettings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        isHidden: 0
+        expanded: 1
+        guid: e3d4b22f-14b4-4952-9e9d-4f7ef26a91fe
+        mode: 0
+        min: 0
+        max: 1
+    - rid: 3729079658954621354
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: fcb537d0-0fbc-4cde-bc07-c0400b9a0f95
+        computeOrder: 36
+        position:
+          serializedVersion: 2
+          x: 349.40002
+          y: 1355.0002
+          width: 101
+          height: 37
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterGUID: e3d4b22f-14b4-4952-9e9d-4f7ef26a91fe
+        accessor: 1

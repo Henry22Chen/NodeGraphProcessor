@@ -10,9 +10,6 @@ namespace GraphProcessor
 	[System.Serializable]
 	public class ParameterNode : BaseNode
 	{
-		[Output]
-		public object output;
-
 		public override string name => "Parameter";
 
 		// We serialize the GUID of the exposed parameter in the graph so we can retrieve the true ExposedParameter from the graph
@@ -50,8 +47,6 @@ namespace GraphProcessor
 				graph.RemoveNode(this);
 				return;
 			}
-
-			output = parameter.value;
 		}
 
 		void OnParamChanged(ExposedParameter modifiedParam)
@@ -66,7 +61,7 @@ namespace GraphProcessor
 		{
 			if (accessor == ParameterAccessor.Get)
 			{
-				yield return BuildCustomPort(nameof(output), (parameter == null) ? typeof(object) : parameter.GetValueType(), "Value", true, true);
+				yield return BuildCustomPort(null, (parameter == null) ? typeof(object) : parameter.GetValueType(), "Value", true, true);
 			}
 		}
 
@@ -80,7 +75,7 @@ namespace GraphProcessor
 
 		protected override bool TryGetOutputValue<T>(int index, out T value, int edgeIdx)
 		{
-			return TryConvertValue(ref output, out value);
+			return parameter.TryReadValue(out value);
 		}
 
 		protected override void Process()
@@ -96,13 +91,9 @@ namespace GraphProcessor
 				return;
 			}
 
-			if (accessor == ParameterAccessor.Get)
-				output = parameter.value;
-			else
+			if (accessor == ParameterAccessor.Set)
 			{
-				object input = null;
-				if (TryReadInputValue(0, ref input))
-					graph.UpdateExposedParameter(parameter.guid, input);
+				graph.UpdateExposedParameterByNode(parameter.guid, inputPorts[0]);
 			}
 		}
 	}

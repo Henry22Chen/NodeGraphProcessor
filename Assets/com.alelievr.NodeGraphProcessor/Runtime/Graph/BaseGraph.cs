@@ -626,6 +626,16 @@ namespace GraphProcessor
 			onExposedParameterModified?.Invoke(param);
 		}
 
+		public void UpdateExposedParameterByNode(string guid, NodePort port)
+		{
+            var param = exposedParameters.Find(e => e.guid == guid);
+            if (param == null)
+                return;
+
+            param.SetValueByNode(port);
+            onExposedParameterModified?.Invoke(param);
+        }
+
 		/// <summary>
 		/// Update the exposed parameter name
 		/// </summary>

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GraphProcessor
 {
 	[Serializable]
-	public class ExposedParameter : ISerializationCallbackReceiver
+	public abstract class ExposedParameter : ISerializationCallbackReceiver
 	{
         [Serializable]
         public class Settings
@@ -49,6 +49,10 @@ namespace GraphProcessor
 			this.name = name;
 			this.value = value;
         }
+
+        public abstract bool TryReadValue<T>(out T value);
+
+        public abstract bool SetValueByNode(NodePort port);
 
 		void ISerializationCallbackReceiver.OnAfterDeserialize()
 		{
@@ -168,6 +172,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (Color)value; }
         protected override Settings CreateSettings() => new ColorSettings();
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -194,6 +208,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (float)value; }
         protected override Settings CreateSettings() => new FloatSettings();
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -220,6 +244,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (Vector2)value; }
         protected override Settings CreateSettings() => new Vector2Settings();
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -228,6 +262,15 @@ namespace GraphProcessor
         [SerializeField] Vector3 val;
 
         public override object value { get => val; set => val = (Vector3)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -236,6 +279,15 @@ namespace GraphProcessor
         [SerializeField] Vector4 val;
 
         public override object value { get => val; set => val = (Vector4)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -262,6 +314,15 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (int)value; }
         protected override Settings CreateSettings() => new IntSettings();
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -270,6 +331,15 @@ namespace GraphProcessor
         [SerializeField] Vector2Int val;
 
         public override object value { get => val; set => val = (Vector2Int)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -278,6 +348,15 @@ namespace GraphProcessor
         [SerializeField] Vector3Int val;
 
         public override object value { get => val; set => val = (Vector3Int)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -286,6 +365,15 @@ namespace GraphProcessor
         [SerializeField] Double val;
 
         public override object value { get => val; set => val = (Double)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -294,6 +382,15 @@ namespace GraphProcessor
         [SerializeField] long val;
 
         public override object value { get => val; set => val = (long)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -302,7 +399,17 @@ namespace GraphProcessor
         [SerializeField] string val;
 
         public override object value { get => val; set => val = (string)value; }
-        public override Type GetValueType() => typeof(String);
+        public override Type GetValueType() => typeof(String); 
+        
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -311,6 +418,15 @@ namespace GraphProcessor
         [SerializeField] Rect val;
 
         public override object value { get => val; set => val = (Rect)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -319,6 +435,15 @@ namespace GraphProcessor
         [SerializeField] RectInt val;
 
         public override object value { get => val; set => val = (RectInt)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -327,6 +452,15 @@ namespace GraphProcessor
         [SerializeField] Bounds val;
 
         public override object value { get => val; set => val = (Bounds)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -335,6 +469,15 @@ namespace GraphProcessor
         [SerializeField] BoundsInt val;
 
         public override object value { get => val; set => val = (BoundsInt)value; }
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -344,6 +487,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (AnimationCurve)value; }
         public override Type GetValueType() => typeof(AnimationCurve);
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -370,6 +523,15 @@ namespace GraphProcessor
         public override object value { get => val; set => val = (Gradient)value; }
         public override Type GetValueType() => typeof(Gradient);
         protected override Settings CreateSettings() => new GradientSettings();
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -379,6 +541,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (GameObject)value; }
         public override Type GetValueType() => typeof(GameObject);
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -387,6 +559,16 @@ namespace GraphProcessor
         [SerializeField] bool val;
 
         public override object value { get => val; set => val = (bool)value; }
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -396,6 +578,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (Texture2D)value; }
         public override Type GetValueType() => typeof(Texture2D);
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -405,6 +597,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (RenderTexture)value; }
         public override Type GetValueType() => typeof(RenderTexture);
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -414,6 +616,16 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (Mesh)value; }
         public override Type GetValueType() => typeof(Mesh);
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 
     [System.Serializable]
@@ -423,5 +635,15 @@ namespace GraphProcessor
 
         public override object value { get => val; set => val = (Material)value; }
         public override Type GetValueType() => typeof(Material);
+
+        public override bool TryReadValue<T>(out T value)
+        {
+            return BaseNode.TryConvertValue(ref val, out value);
+        }
+
+        public override bool SetValueByNode(NodePort port)
+        {
+            return port.TryReadInputValue(out val);
+        }
     }
 }
