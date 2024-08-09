@@ -85,7 +85,7 @@ namespace GraphProcessor
 			owner.computeOrderUpdated += ComputeOrderUpdatedCallback;
 			node.onMessageAdded += AddMessageView;
 			node.onMessageRemoved += RemoveMessageView;
-			node.onPortsUpdated += a => schedule.Execute(_ => UpdatePortsForField(a)).ExecuteLater(0);
+			node.onPortsUpdated += () => schedule.Execute(() => UpdatePortsForField()).ExecuteLater(0);
 
             styleSheets.Add(Resources.Load<StyleSheet>(baseNodeStyle));
 
@@ -453,9 +453,15 @@ namespace GraphProcessor
 					p.RemoveFromHierarchy();
 			}
 
+			portsPerNodePort.Remove(p.Port);
 			List< PortView > ports;
-			portsPerFieldName.TryGetValue(p.fieldName, out ports);
-			ports.Remove(p);
+			if (p.fieldName != null)
+			{
+				portsPerFieldName.TryGetValue(p.fieldName, out ports);
+				ports.Remove(p);
+			}
+			if(p.portData.identifier != -1)
+				portsPerIdentifier.Remove(p.portData.identifier);
 		}
 		
 		private void SetValuesForSelectedNodes()
@@ -1161,7 +1167,7 @@ namespace GraphProcessor
 				// Add missing port views
 				if (!portViews.Any(pv => p.portData.identifier == pv.portData.identifier))
 				{
-					Direction portDirection = nodeTarget.IsFieldInput(p.fieldName) ? Direction.Input : Direction.Output;
+					Direction portDirection = p.isInput ? Direction.Input : Direction.Output;
 					var pv = AddPort(p, portDirection, listener, p.portData);
 					portViewList.Add(pv);
 				}
@@ -1237,7 +1243,7 @@ namespace GraphProcessor
 			RefreshPorts();
 		}
 
-		void UpdatePortsForField(string fieldName)
+		void UpdatePortsForField()
 		{
 			// TODO: actual code
 			RefreshPorts();

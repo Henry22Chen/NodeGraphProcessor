@@ -24,9 +24,13 @@ namespace GraphProcessor
 		public NodePort	inputPort;
 		[System.NonSerialized]
 		public NodePort outputPort;
+        [System.NonSerialized]
+        public int inputEdgeIndex;
+        [System.NonSerialized]
+        public int outputEdgeIndex;
 
-		//temporary object used to send port to port data when a custom input/output function is used.
-		[System.NonSerialized]
+        //temporary object used to send port to port data when a custom input/output function is used.
+        [System.NonSerialized]
 		public object	passThroughBuffer;
 
 		[System.NonSerialized]
@@ -74,10 +78,14 @@ namespace GraphProcessor
 		public void Deserialize()
 		{
 			if (!owner.nodesPerGUID.ContainsKey(outputNodeGUID) || !owner.nodesPerGUID.ContainsKey(inputNodeGUID))
-				return ;
+				return;
 
 			outputNode = owner.nodesPerGUID[outputNodeGUID];
 			inputNode = owner.nodesPerGUID[inputNodeGUID];
+			if (inputFieldName == "")
+				inputFieldName = null;
+			if (outputFieldName == "")
+				outputFieldName = null;
 			inputPort = inputNode.GetPort(inputFieldName, inputPortIdentifier);
 			outputPort = outputNode.GetPort(outputFieldName, outputPortIdentifier);
 		}

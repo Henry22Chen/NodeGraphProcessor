@@ -17,8 +17,6 @@ public class VectorNode : BaseNode
     public bool testValue;
 
 	public override string		name => "Vector";
-
-    public override bool propagateValues => false;
     protected override bool hasCustomInputs => true;
     protected override bool hasCustomOutputs => true;
 
@@ -48,7 +46,7 @@ public class VectorNode : BaseNode
         TryReadInputValue(4, ref input.w);
         output = input;
 	}
-    protected override bool TryGetOutputValue<T>(int index, out T value)
+    protected override bool TryGetOutputValue<T>(int index, out T value, int edgeIdx)
     {
         switch (index)
         {

@@ -14,11 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serializedNodes: []
   nodes:
-  - rid: 3729079589780062407
-  - rid: 3729079589780062408
-  - rid: 3729079589780062409
-  - rid: 3729079589780062410
-  edges: []
+  - rid: 3729079658954621144
+  - rid: 3729079658954621156
+  edges:
+  - GUID: 6867c094-0ac6-418e-819c-befdc267aeba
+    owner: {fileID: 11400000}
+    inputNodeGUID: db59688f-1e15-472d-8453-c70126303d4c
+    outputNodeGUID: e555c3b5-83e1-4f9d-b86d-a33f347f9048
+    inputFieldName: 
+    outputFieldName: output
+    inputPortIdentifier: 0
+    outputPortIdentifier: -1
   groups: []
   stackNodes: []
   pinnedElements:
@@ -64,83 +70,43 @@ MonoBehaviour:
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   exposedParameters: []
   serializedParameterList: []
-  stickyNotes:
-  - position:
-      serializedVersion: 2
-      x: 553
-      y: 24
-      width: 200
-      height: 299
-    title: Create Note
-    content: Description
+  stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 185, y: 50, z: 0}
+  position: {x: 163, y: 71, z: 0}
   scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 2
     RefIds:
-    - rid: 3729079589780062407
-      type: {class: MultiAddNode, ns: , asm: Assembly-CSharp}
+    - rid: 3729079658954621144
+      type: {class: Float2Node, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 0550468c-feb4-41bc-a68d-54ff890ed71f
+        GUID: e555c3b5-83e1-4f9d-b86d-a33f347f9048
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: 317.26086
-          y: 284.5
-          width: 118
-          height: 113
+          x: 100
+          y: 171
+          width: 100
+          height: 100
         expanded: 0
-        debug: 1
+        debug: 0
         nodeLock: 0
-        output: 42
-    - rid: 3729079589780062408
-      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
+        output: 0
+        input: 0
+    - rid: 3729079658954621156
+      type: {class: CustomPortData, ns: , asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: c0f7a068-db0c-48bc-bae1-acd2aeff6b32
+        GUID: db59688f-1e15-472d-8453-c70126303d4c
         computeOrder: 1
         position:
           serializedVersion: 2
-          x: 207
-          y: 106.5
-          width: 102
-          height: 99
-        expanded: 0
-        debug: 0
-        nodeLock: 1
-        output: 21
-        input: 21
-    - rid: 3729079589780062409
-      type: {class: FloatNode, ns: , asm: Assembly-CSharp}
-      data:
-        nodeCustomName: 
-        GUID: 38f97e90-225e-4549-ab7b-ca707a5664a0
-        computeOrder: 2
-        position:
-          serializedVersion: 2
-          x: 155.31758
-          y: 353.21927
-          width: 74
-          height: 101
+          x: 312.30438
+          y: 171
+          width: 127
+          height: 147
         expanded: 0
         debug: 0
         nodeLock: 0
-        output: 21
-        input: 21
-    - rid: 3729079589780062410
-      type: {class: PrintNode, ns: , asm: Assembly-CSharp}
-      data:
-        nodeCustomName: 
-        GUID: c1be8783-9f9f-46ff-a094-356f4e658c8d
-        computeOrder: 3
-        position:
-          serializedVersion: 2
-          x: 459.2174
-          y: 247.65219
-          width: 72
-          height: 96
-        expanded: 0
-        debug: 1
-        nodeLock: 0
+        output: 0

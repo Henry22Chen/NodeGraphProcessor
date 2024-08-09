@@ -10,9 +10,6 @@ namespace GraphProcessor
 	[System.Serializable]
 	public class ParameterNode : BaseNode
 	{
-		[Input]
-		public object input;
-
 		[Output]
 		public object output;
 
@@ -27,6 +24,9 @@ namespace GraphProcessor
 		public event Action onParameterChanged;
 
 		public ParameterAccessor accessor;
+
+		protected override bool hasCustomInputs => true;
+		protected override bool hasCustomOutputs => true;
 
 		protected override void Enable()
 		{
@@ -62,33 +62,25 @@ namespace GraphProcessor
 			}
 		}
 
-		[CustomPortBehavior(nameof(output))]
-		IEnumerable<PortData> GetOutputPort(List<SerializableEdge> edges)
+		protected override IEnumerable<PortData> GetCustomOutputPorts()
 		{
 			if (accessor == ParameterAccessor.Get)
 			{
-				yield return new PortData
-				{
-					identifier = 10,
-					displayName = "Value",
-					displayType = (parameter == null) ? typeof(object) : parameter.GetValueType(),
-					acceptMultipleEdges = true
-				};
+				yield return BuildCustomPort(nameof(output), (parameter == null) ? typeof(object) : parameter.GetValueType(), "Value", true, true);
 			}
 		}
 
-		[CustomPortBehavior(nameof(input))]
-		IEnumerable<PortData> GetInputPort(List<SerializableEdge> edges)
+		protected override IEnumerable<PortData> GetCustomInputPorts()
 		{
 			if (accessor == ParameterAccessor.Set)
 			{
-				yield return new PortData
-				{
-					identifier = 0,
-					displayName = "Value",
-					displayType = (parameter == null) ? typeof(object) : parameter.GetValueType(),
-				};
+				yield return BuildCustomPort(null, (parameter == null) ? typeof(object) : parameter.GetValueType(), "Value", false);
 			}
+		}
+
+		protected override bool TryGetOutputValue<T>(int index, out T value, int edgeIdx)
+		{
+			return TryConvertValue(ref output, out value);
 		}
 
 		protected override void Process()
@@ -107,7 +99,11 @@ namespace GraphProcessor
 			if (accessor == ParameterAccessor.Get)
 				output = parameter.value;
 			else
-				graph.UpdateExposedParameter(parameter.guid, input);
+			{
+				object input = null;
+				if (TryReadInputValue(0, ref input))
+					graph.UpdateExposedParameter(parameter.guid, input);
+			}
 		}
 	}
 

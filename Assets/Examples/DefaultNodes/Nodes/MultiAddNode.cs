@@ -15,26 +15,28 @@ public class MultiAddNode : BaseNode
 
 	public override string		name => "Add";
 
-	protected override void Process()
+	protected override bool hasCustomInputs => true;
+
+    protected override void Process()
 	{
+		var cnt = inputPorts[0].GetEdges().Count;
 		output = 0;
-
-		if (inputs == null)
-			return ;
-
-		foreach (float input in inputs)
-			output += input;
+		
+		for(int i = 0; i < cnt; i++)
+		{
+			float val =0;
+			if (TryReadInputValue(0, ref val, i))
+				output += val;
+		}
 	}
 
-	[CustomPortBehavior(nameof(inputs))]
-	IEnumerable< PortData > GetPortsForInputs(List< SerializableEdge > edges)
-	{
-		yield return new PortData{ displayName = "In ", displayType = typeof(float), acceptMultipleEdges = true};
-	}
+    protected override bool TryGetOutputValue<T>(int index, out T value, int edgeIndex)
+    {
+		return TryConvertValue(ref output, out value);  
+    }
 
-	[CustomPortInput(nameof(inputs), typeof(float), allowCast = true)]
-	public void GetInputs(List< SerializableEdge > edges)
-	{
-		inputs = edges.Select(e => (float)e.passThroughBuffer);
-	}
+    protected override IEnumerable<PortData> GetCustomInputPorts()
+    {
+		yield return BuildCustomPort(null, typeof(float), "In", allowMultiple: true);
+    }
 }

@@ -814,8 +814,8 @@ namespace GraphProcessor
 		{
 			edges.RemoveAll(e => e.inputNode == null
 				|| e.outputNode == null
-				|| string.IsNullOrEmpty(e.outputFieldName)
-				|| string.IsNullOrEmpty(e.inputFieldName)
+				|| (string.IsNullOrEmpty(e.outputFieldName) && e.outputPortIdentifier == -1)
+				|| (string.IsNullOrEmpty(e.inputFieldName) && e.inputPortIdentifier == -1)
 			);
 			nodes.RemoveAll(n => n == null);
 		}
@@ -833,10 +833,6 @@ namespace GraphProcessor
 
 			if (TypeAdapter.AreIncompatible(t1, t2))
 				return false;
-
-			//Check if there is custom adapters for this assignation
-			if (CustomPortIO.IsAssignable(t1, t2))
-				return true;
 
 			//Check for type assignability
 			if (t2.IsReallyAssignableFrom(t1))

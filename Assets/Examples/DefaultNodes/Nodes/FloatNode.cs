@@ -29,8 +29,6 @@ public class Float2Node : BaseNode
 
     public override string name => "Float";
 
-    public override bool propagateValues => false;
-
     protected override void Process()
     {
         if (!TryReadInputValue(0, ref input))
@@ -40,7 +38,7 @@ public class Float2Node : BaseNode
         output = input;
     }
 
-    protected override bool TryGetOutputValue<T>(int index, out T value)
+    protected override bool TryGetOutputValue<T>(int index, out T value, int edgeIdx)
     {
         return TryConvertValue(ref this.output, out value);
     }

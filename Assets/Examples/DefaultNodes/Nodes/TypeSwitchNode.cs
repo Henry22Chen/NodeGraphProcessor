@@ -15,18 +15,23 @@ public class TypeSwitchNode : BaseNode
 
 	public override string		name => "TypeSwitchNode";
 
-	[CustomPortBehavior(nameof(input))]
-	IEnumerable< PortData > GetInputPort(List< SerializableEdge > edges)
-	{
-		yield return new PortData{
-			identifier = 1,
-			displayName = "In",
-			displayType = (toggleType) ? typeof(float) : typeof(string)
-		};
-	}
+	protected override bool hasCustomInputs => true;
+
+    protected override IEnumerable<PortData> GetCustomInputPorts()
+    {
+		yield return BuildCustomPort(nameof(input), (toggleType) ? typeof(float) : typeof(string), "In");
+    }
 	
 	protected override void Process()
 	{
+		if (toggleType)
+		{
+			float val = 0;
+			if (TryReadInputValue(0, ref val))
+				input = val.ToString();
+		}
+		else
+			TryReadInputValue(0, ref input);
 		Debug.Log("Input: " + input);
 	}
 }

@@ -11,7 +11,7 @@ namespace GraphProcessor
 	public class PortView : Port
 	{
 		public string				fieldName => fieldInfo?.Name;
-		public Type					fieldType => fieldInfo.FieldType;
+		public Type					fieldType => fieldInfo?.FieldType; 
 		public new Type				portType;
         public BaseNodeView     	owner { get; private set; }
 		public PortData				portData;

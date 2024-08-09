@@ -217,8 +217,6 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        inputs: []
-        outputs: []
         portCount: 5
     - rid: 9
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
@@ -250,6 +248,4 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        inputs: []
-        outputs: []
         portCount: 3
