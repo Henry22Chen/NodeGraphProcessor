@@ -19,7 +19,7 @@ public class TypeSwitchNode : BaseNode
 	IEnumerable< PortData > GetInputPort(List< SerializableEdge > edges)
 	{
 		yield return new PortData{
-			identifier = "input",
+			identifier = 1,
 			displayName = "In",
 			displayType = (toggleType) ? typeof(float) : typeof(string)
 		};

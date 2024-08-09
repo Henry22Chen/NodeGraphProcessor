@@ -268,15 +268,15 @@ namespace GraphProcessor
 		/// </summary>
 		public virtual void InitializePorts()
 		{
-			//InitializeCustomPortTypeMethods();
+			InitializeCustomPortTypeMethods();
 			if (!TryGetCustomPorts())
 			{
-				foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+				/*foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
 				{
 					var nodeField = nodeFields[key.Name];
 					AddPort(nodeField.input, nodeField.fieldName, new PortData { acceptMultipleEdges = nodeField.isMultiple, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
-				}
-                /*foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+				}*/
+                foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
 				{
 					var nodeField = nodeFields[key.Name];
 
@@ -289,7 +289,7 @@ namespace GraphProcessor
 						// If we don't have a custom behavior on the node, we just have to create a simple port
 						AddPort(nodeField.input, nodeField.fieldName, new PortData { acceptMultipleEdges = nodeField.isMultiple, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
 					}
-				}*/
+				}
             }
 		}
 
@@ -379,7 +379,7 @@ namespace GraphProcessor
 			if (!HasCustomBehavior(fieldInfo))
 				return false;
 
-			List< string > finalPorts = new List< string >();
+			List< int > finalPorts = new List< int >();
 
 			var portCollection = fieldInfo.input ? (NodePortContainer)inputPorts : outputPorts;
 
@@ -751,7 +751,7 @@ namespace GraphProcessor
 				displayType = displayType,
 				tooltip = tooltip,
 				vertical = vertical,
-				identifier = displayName
+				identifier = -1
 			};
 			AddPort(input, fieldName, portData);
         }
@@ -861,10 +861,10 @@ namespace GraphProcessor
 		/// <param name="fieldName">C# field name</param>
 		/// <param name="identifier">Unique port identifier</param>
 		/// <returns></returns>
-		public NodePort	GetPort(string fieldName, string identifier)
+		public NodePort	GetPort(string fieldName, int identifier = -1)
 		{
 			return inputPorts.Concat(outputPorts).FirstOrDefault(p => {
-				var bothNull = String.IsNullOrEmpty(identifier) && String.IsNullOrEmpty(p.portData.identifier);
+				var bothNull = identifier == -1 && p.portData.identifier == -1 ;
 				return p.fieldName == fieldName && (bothNull || identifier == p.portData.identifier);
 			});
 		}

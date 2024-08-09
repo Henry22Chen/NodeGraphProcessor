@@ -25,87 +25,7 @@ MonoBehaviour:
   - rid: 8
   - rid: 9
   - rid: 10
-  edges:
-  - GUID: 035ee169-e916-40b5-aecc-831d072ea9ab
-    owner: {fileID: 11400000}
-    inputNodeGUID: e2203ce1-49be-41ea-814a-465faf267adb
-    outputNodeGUID: 7078860c-f7cb-4534-befd-da3c678d17ee
-    inputFieldName: obj
-    outputFieldName: outputRadians
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: af82447c-1ab3-423d-ab51-cd257c874ceb
-    owner: {fileID: 11400000}
-    inputNodeGUID: 0d8cd048-486b-4cce-9bd3-616bd2255d45
-    outputNodeGUID: 7078860c-f7cb-4534-befd-da3c678d17ee
-    inputFieldName: obj
-    outputFieldName: outputRadians
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: 5077ac73-1d8a-4a83-91b8-124993bb62d8
-    owner: {fileID: 11400000}
-    inputNodeGUID: 3b193543-3bd6-44d6-9664-115ecc6f2502
-    outputNodeGUID: 7078860c-f7cb-4534-befd-da3c678d17ee
-    inputFieldName: obj
-    outputFieldName: outputRadians
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: 418457cd-27d8-4803-9cb6-f13336a1840e
-    owner: {fileID: 11400000}
-    inputNodeGUID: e3318e7b-5469-424c-ab54-9524e62907a8
-    outputNodeGUID: 7078860c-f7cb-4534-befd-da3c678d17ee
-    inputFieldName: obj
-    outputFieldName: outputRadians
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: eda82c3d-12c7-40bc-adb6-eb0abe22c476
-    owner: {fileID: 11400000}
-    inputNodeGUID: 83c994d8-6442-4e61-82e1-e83537229fda
-    outputNodeGUID: 7078860c-f7cb-4534-befd-da3c678d17ee
-    inputFieldName: obj
-    outputFieldName: outputRadians
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: c7aeeeaa-b2a3-468a-8373-f9f6e4cf08a5
-    owner: {fileID: 11400000}
-    inputNodeGUID: 6b00dec7-a9af-4c2c-91fe-edb8f892882f
-    outputNodeGUID: 02bc84c5-93ad-4a5e-b627-e930d133a1fd
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: d9874a1d-93c3-4e39-a559-cc81999c26a5
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1f8d14f7-5355-4734-8837-36668dd8e8ba
-    outputNodeGUID: 02bc84c5-93ad-4a5e-b627-e930d133a1fd
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 0a5a5b73-93b0-474d-94f9-24f060a1c545
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1f8d14f7-5355-4734-8837-36668dd8e8ba
-    outputNodeGUID: 02bc84c5-93ad-4a5e-b627-e930d133a1fd
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 1
-    outputPortIdentifier: 
-  - GUID: ad729fe3-5664-4163-a4e7-825262af1996
-    owner: {fileID: 11400000}
-    inputNodeGUID: 39f87d68-86a6-4b72-8a26-315c18d08525
-    outputNodeGUID: 1f8d14f7-5355-4734-8837-36668dd8e8ba
-    inputFieldName: obj
-    outputFieldName: outputs
-    inputPortIdentifier: 
-    outputPortIdentifier: 
-  - GUID: 362c225a-5bfd-4adb-8327-7fb0e49be493
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1f8d14f7-5355-4734-8837-36668dd8e8ba
-    outputNodeGUID: 02bc84c5-93ad-4a5e-b627-e930d133a1fd
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 2
-    outputPortIdentifier: 
+  edges: []
   groups: []
   stackNodes: []
   pinnedElements:
@@ -173,12 +93,7 @@ MonoBehaviour:
         expanded: 0
         debug: 0
         nodeLock: 0
-        outputRadians:
-        - 0
-        - 1.2566371
-        - 2.5132742
-        - 3.7699113
-        - 5.0265484
+        outputRadians: []
     - rid: 1
       type: {class: PrintNode, ns: , asm: Assembly-CSharp}
       data:
@@ -259,7 +174,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 6b00dec7-a9af-4c2c-91fe-edb8f892882f
-        computeOrder: 7
+        computeOrder: 6
         position:
           serializedVersion: 2
           x: 681.8262
@@ -275,7 +190,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 02bc84c5-93ad-4a5e-b627-e930d133a1fd
-        computeOrder: 6
+        computeOrder: 7
         position:
           serializedVersion: 2
           x: 394

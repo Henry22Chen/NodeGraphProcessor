@@ -8,7 +8,7 @@ using System;
 [System.Serializable, NodeMenuItem("Utils/Relay")]
 public class RelayNode : BaseNode
 {
-	const string packIdentifier = "_Pack";
+	const int packIdentifier = 122112;
 
 	[HideInInspector]
 	public struct PackedRelayData
@@ -112,7 +112,7 @@ public class RelayNode : BaseNode
 		yield return new PortData {
 			displayName = "",
 			displayType = inputType.type,
-			identifier = "0",
+			identifier = 0,
 			acceptMultipleEdges = true,
 			sizeInPixel = Mathf.Min(k_MaxPortSize, sizeInPixel + 8),
 		};
@@ -127,7 +127,7 @@ public class RelayNode : BaseNode
 			yield return new PortData {
 				displayName = "",
 				displayType = typeof(object),
-				identifier = "0",
+				identifier = 0,
 				acceptMultipleEdges = true,
 			};
 			yield break;
@@ -152,7 +152,7 @@ public class RelayNode : BaseNode
 				yield return new PortData {
 					displayName = underlyingPortData?[i].name ?? "",
 					displayType = underlyingPortData?[i].type ?? typeof(object),
-					identifier = i.ToString(),
+					identifier = i,
 					acceptMultipleEdges = true,
 					sizeInPixel = 0,
 				};
@@ -163,7 +163,7 @@ public class RelayNode : BaseNode
 			yield return new PortData {
 				displayName = "",
 				displayType = inputType.type,
-				identifier = "0",
+				identifier = 0,
 				acceptMultipleEdges = true,
 				sizeInPixel = Mathf.Min(k_MaxPortSize, Mathf.Max(underlyingPortData.Count, 1) + 7),
 			};

@@ -119,7 +119,7 @@ namespace GraphProcessor
 			        portType = typeof(System.Object),
 			        isInput = inputPortView != null,
 			        portFieldName = inputPortView != null ? nameof(RelayNode.output) : nameof(RelayNode.input),
-			        portIdentifier = "0",
+			        portIdentifier = 0,
 			        portDisplayName = inputPortView != null ? "Out" : "In",
                 }
             });

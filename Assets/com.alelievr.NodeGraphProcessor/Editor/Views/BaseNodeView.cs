@@ -346,10 +346,10 @@ namespace GraphProcessor
 			return GetPortViewsFromFieldName(fieldName)?.First();
 		}
 
-		public PortView GetPortViewFromFieldName(string fieldName, string identifier)
+		public PortView GetPortViewFromFieldName(string fieldName, int identifier)
 		{
 			return GetPortViewsFromFieldName(fieldName)?.FirstOrDefault(pv => {
-				return (pv.portData.identifier == identifier) || (String.IsNullOrEmpty(pv.portData.identifier) && String.IsNullOrEmpty(identifier));
+				return (pv.portData.identifier == identifier) || (pv.portData.identifier == -1 && identifier == -1);
 			});
 		}
 

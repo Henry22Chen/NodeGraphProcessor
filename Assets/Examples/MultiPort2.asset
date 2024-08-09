@@ -20,37 +20,13 @@ MonoBehaviour:
   - rid: 3729079590015467862
   - rid: 3729079632048161233
   edges:
-  - GUID: ffc43740-60f3-408a-ad5e-540cb8bfe0c0
+  - GUID: 76072bfd-415b-4c4c-bcf3-c7ec58deec77
     owner: {fileID: 11400000}
     inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
     outputNodeGUID: dad63bae-fb0e-495e-97a4-cfcc6f40b0c4
     inputFieldName: inputs
     outputFieldName: output
-    inputPortIdentifier: 0
-    outputPortIdentifier: 
-  - GUID: 813d2019-ad55-4d84-aea2-25e78dc0c815
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
-    outputNodeGUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
-    inputFieldName: inputs
-    outputFieldName: output
     inputPortIdentifier: 1
-    outputPortIdentifier: 
-  - GUID: c108d11f-e184-405d-836a-a8c18a69aa02
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
-    outputNodeGUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 2
-    outputPortIdentifier: 
-  - GUID: 0f254b80-5926-4e69-8f12-41188d12e109
-    owner: {fileID: 11400000}
-    inputNodeGUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
-    outputNodeGUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
-    inputFieldName: inputs
-    outputFieldName: output
-    inputPortIdentifier: 3
     outputPortIdentifier: 
   groups: []
   stackNodes: []
@@ -79,7 +55,7 @@ MonoBehaviour:
   serializedParameterList: []
   stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 28, y: 19, z: 0}
+  position: {x: 34, y: 119, z: 0}
   scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
@@ -122,7 +98,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: 1170b803-926d-41dd-8f9a-31ab41d8eac4
-        computeOrder: 4
+        computeOrder: 3
         position:
           serializedVersion: 2
           x: 499.50006
@@ -157,7 +133,7 @@ MonoBehaviour:
       data:
         nodeCustomName: 
         GUID: cf71e27c-23cb-4d7d-92b8-11b76bb07e26
-        computeOrder: 3
+        computeOrder: 4
         position:
           serializedVersion: 2
           x: 285.00003

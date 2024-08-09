@@ -36,8 +36,8 @@ namespace GraphProcessor
 		public string	outputFieldName;
 
 		// Use to store the id of the field that generate multiple ports
-		public string	inputPortIdentifier;
-		public string	outputPortIdentifier;
+		public int	inputPortIdentifier;
+		public int	outputPortIdentifier;
 
 		public SerializableEdge() {}
 

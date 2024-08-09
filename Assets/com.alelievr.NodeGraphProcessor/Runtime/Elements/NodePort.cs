@@ -18,7 +18,7 @@ namespace GraphProcessor
 		/// <summary>
 		/// Unique identifier for the port
 		/// </summary>
-		public string	identifier;
+		public int	identifier = -1;
 		/// <summary>
 		/// Display name on the node
 		/// </summary>
@@ -356,11 +356,11 @@ namespace GraphProcessor
 		public void Add(SerializableEdge edge)
 		{
 			string portFieldName = (edge.inputNode == node) ? edge.inputFieldName : edge.outputFieldName;
-			string portIdentifier = (edge.inputNode == node) ? edge.inputPortIdentifier : edge.outputPortIdentifier;
+			int portIdentifier = (edge.inputNode == node) ? edge.inputPortIdentifier : edge.outputPortIdentifier;
 
 			// Force empty string to null since portIdentifier is a serialized value
-			if (String.IsNullOrEmpty(portIdentifier))
-				portIdentifier = null;
+			//if (String.IsNullOrEmpty(portIdentifier))
+			//	portIdentifier = null;
 
 			var port = this.FirstOrDefault(p =>
 			{

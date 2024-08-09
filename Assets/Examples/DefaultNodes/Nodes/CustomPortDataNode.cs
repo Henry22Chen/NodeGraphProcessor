@@ -11,10 +11,10 @@ public class CustomPortData : BaseNode
 	public IEnumerable< object >	inputs = null;
 
 	static PortData[] portDatas = new PortData[] {
-		new PortData{displayName = "0", displayType = typeof(float), identifier = "0"},
-		new PortData{displayName = "1", displayType = typeof(int), identifier = "1"},
-		new PortData{displayName = "2", displayType = typeof(GameObject), identifier = "2"},
-		new PortData{displayName = "3", displayType = typeof(Texture2D), identifier = "3"},
+		new PortData{displayName = "0", displayType = typeof(float), identifier = 0},
+		new PortData{displayName = "1", displayType = typeof(int), identifier = 1},
+		new PortData{displayName = "2", displayType = typeof(GameObject), identifier = 2},
+		new PortData{displayName = "3", displayType = typeof(Texture2D), identifier = 3},
 	};
 
 	[Output]

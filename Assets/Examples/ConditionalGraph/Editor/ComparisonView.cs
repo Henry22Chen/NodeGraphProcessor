@@ -34,8 +34,8 @@ public class ComparisonView : BaseNodeView
 
 		void UpdateVisibleFields(SerializableEdge _)
 		{
-			var inA = nodeTarget.GetPort(nameof(comparisonNode.inA), null);
-			var inB = nodeTarget.GetPort(nameof(comparisonNode.inB), null);
+			var inA = nodeTarget.GetPort(nameof(comparisonNode.inA), -1);
+			var inB = nodeTarget.GetPort(nameof(comparisonNode.inB), -1);
 
 			controlsContainer.Add(inputA);
 			controlsContainer.Add(inputB);

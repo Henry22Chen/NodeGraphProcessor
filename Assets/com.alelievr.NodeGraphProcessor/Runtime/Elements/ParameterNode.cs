@@ -69,7 +69,7 @@ namespace GraphProcessor
 			{
 				yield return new PortData
 				{
-					identifier = "output",
+					identifier = 10,
 					displayName = "Value",
 					displayType = (parameter == null) ? typeof(object) : parameter.GetValueType(),
 					acceptMultipleEdges = true
@@ -84,7 +84,7 @@ namespace GraphProcessor
 			{
 				yield return new PortData
 				{
-					identifier = "input",
+					identifier = 0,
 					displayName = "Value",
 					displayType = (parameter == null) ? typeof(object) : parameter.GetValueType(),
 				};

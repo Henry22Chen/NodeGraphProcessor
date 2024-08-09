@@ -17,7 +17,7 @@ namespace GraphProcessor
 			public Type portType;
 			public bool isInput;
 			public string portFieldName;
-			public string portIdentifier;
+			public int portIdentifier;
 			public string portDisplayName;
 		}
 

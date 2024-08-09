@@ -38,7 +38,7 @@ public class CustomPortsNode : BaseNode
 			yield return new PortData {
 				displayName = "In " + i,
 				displayType = typeof(float),
-				identifier = i.ToString(), // Must be unique
+				identifier = i, // Must be unique
 			};
 		}
 	}
