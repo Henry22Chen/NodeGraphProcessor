@@ -54,6 +54,7 @@ namespace GraphProcessor
 
         public abstract bool SetValueByNode(NodePort port);
 
+        public abstract bool SetValue<T>(T value);
 		void ISerializationCallbackReceiver.OnAfterDeserialize()
 		{
 			// SerializeReference migration step:
@@ -151,7 +152,7 @@ namespace GraphProcessor
     // Due to polymorphic constraints with [SerializeReference] we need to explicitly create a class for
     // every parameter type available in the graph (i.e. templating doesn't work)
     [System.Serializable]
-    public class ColorParameter : ExposedParameter
+    public class ColorParameter : TypedExposedParameter<Color>
     {
         public enum ColorMode
         {
@@ -168,24 +169,12 @@ namespace GraphProcessor
                 => base.Equals(param) && mode == ((ColorSettings)param).mode;
         }
 
-        [SerializeField] Color val;
-
         public override object value { get => val; set => val = (Color)value; }
         protected override Settings CreateSettings() => new ColorSettings();
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class FloatParameter : ExposedParameter
+    public class FloatParameter : TypedExposedParameter<float>
     {
         public enum FloatMode
         {
@@ -204,24 +193,12 @@ namespace GraphProcessor
                 => base.Equals(param) && mode == ((FloatSettings)param).mode && min == ((FloatSettings)param).min && max == ((FloatSettings)param).max;
         }
 
-        [SerializeField] float val;
-
         public override object value { get => val; set => val = (float)value; }
         protected override Settings CreateSettings() => new FloatSettings();
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class Vector2Parameter : ExposedParameter
+    public class Vector2Parameter : TypedExposedParameter<Vector2>
     {
         public enum Vector2Mode
         {
@@ -240,58 +217,24 @@ namespace GraphProcessor
                 => base.Equals(param) && mode == ((Vector2Settings)param).mode && min == ((Vector2Settings)param).min && max == ((Vector2Settings)param).max;
         }
 
-        [SerializeField] Vector2 val;
-
         public override object value { get => val; set => val = (Vector2)value; }
         protected override Settings CreateSettings() => new Vector2Settings();
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class Vector3Parameter : ExposedParameter
+    public class Vector3Parameter : TypedExposedParameter<Vector3>
     {
-        [SerializeField] Vector3 val;
-
         public override object value { get => val; set => val = (Vector3)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class Vector4Parameter : ExposedParameter
+    public class Vector4Parameter : TypedExposedParameter<Vector4>
     {
-        [SerializeField] Vector4 val;
-
         public override object value { get => val; set => val = (Vector4)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class IntParameter : ExposedParameter
+    public class IntParameter : TypedExposedParameter<int>
     {
         public enum IntMode
         {
@@ -310,197 +253,72 @@ namespace GraphProcessor
                 => base.Equals(param) && mode == ((IntSettings)param).mode && min == ((IntSettings)param).min && max == ((IntSettings)param).max;
         }
 
-        [SerializeField] int val;
-
         public override object value { get => val; set => val = (int)value; }
         protected override Settings CreateSettings() => new IntSettings();
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class Vector2IntParameter : ExposedParameter
+    public class Vector2IntParameter : TypedExposedParameter<Vector2Int>
     {
-        [SerializeField] Vector2Int val;
-
         public override object value { get => val; set => val = (Vector2Int)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class Vector3IntParameter : ExposedParameter
+    public class Vector3IntParameter : TypedExposedParameter<Vector3Int>
     {
-        [SerializeField] Vector3Int val;
-
         public override object value { get => val; set => val = (Vector3Int)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class DoubleParameter : ExposedParameter
+    public class DoubleParameter : TypedExposedParameter<double>
     {
-        [SerializeField] Double val;
-
         public override object value { get => val; set => val = (Double)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class LongParameter : ExposedParameter
+    public class LongParameter : TypedExposedParameter<long>
     {
-        [SerializeField] long val;
-
         public override object value { get => val; set => val = (long)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class StringParameter : ExposedParameter
+    public class StringParameter : TypedExposedParameter<string>
     {
-        [SerializeField] string val;
-
         public override object value { get => val; set => val = (string)value; }
-        public override Type GetValueType() => typeof(String); 
-        
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class RectParameter : ExposedParameter
+    public class RectParameter : TypedExposedParameter<Rect>
     {
-        [SerializeField] Rect val;
-
         public override object value { get => val; set => val = (Rect)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class RectIntParameter : ExposedParameter
+    public class RectIntParameter : TypedExposedParameter<RectInt>
     {
-        [SerializeField] RectInt val;
-
         public override object value { get => val; set => val = (RectInt)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class BoundsParameter : ExposedParameter
+    public class BoundsParameter : TypedExposedParameter<Bounds>
     {
-        [SerializeField] Bounds val;
-
         public override object value { get => val; set => val = (Bounds)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class BoundsIntParameter : ExposedParameter
+    public class BoundsIntParameter : TypedExposedParameter<BoundsInt>
     {
-        [SerializeField] BoundsInt val;
-
         public override object value { get => val; set => val = (BoundsInt)value; }
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class AnimationCurveParameter : ExposedParameter
-    {
-        [SerializeField] AnimationCurve val;
-
-        public override object value { get => val; set => val = (AnimationCurve)value; }
-        public override Type GetValueType() => typeof(AnimationCurve);
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
+    public class AnimationCurveParameter : TypedExposedParameter<AnimationCurve>
+    {       
+        public override object value { get => val; set => val = (AnimationCurve)value; }     
     }
 
     [System.Serializable]
-    public class GradientParameter : ExposedParameter
+    public class GradientParameter : TypedExposedParameter<Gradient>
     {
         public enum GradientColorMode
         {
@@ -517,124 +335,52 @@ namespace GraphProcessor
                 => base.Equals(param) && mode == ((GradientSettings)param).mode;
         }
 
-        [SerializeField] Gradient val;
         [SerializeField, GradientUsage(true)] Gradient hdrVal;
 
         public override object value { get => val; set => val = (Gradient)value; }
-        public override Type GetValueType() => typeof(Gradient);
-        protected override Settings CreateSettings() => new GradientSettings();
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
+        protected override Settings CreateSettings() => new GradientSettings();        
     }
 
     [System.Serializable]
-    public class GameObjectParameter : ExposedParameter
+    public class GameObjectParameter : TypedExposedParameter<GameObject>
     {
-        [SerializeField] GameObject val;
-
         public override object value { get => val; set => val = (GameObject)value; }
-        public override Type GetValueType() => typeof(GameObject);
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class BoolParameter : ExposedParameter
+    public class BoolParameter : TypedExposedParameter<bool>
     {
-        [SerializeField] bool val;
-
         public override object value { get => val; set => val = (bool)value; }
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class Texture2DParameter : ExposedParameter
+    public class Texture2DParameter : TypedExposedParameter<Texture2D>
     {
-        [SerializeField] Texture2D val;
-
         public override object value { get => val; set => val = (Texture2D)value; }
-        public override Type GetValueType() => typeof(Texture2D);
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class RenderTextureParameter : ExposedParameter
+    public class RenderTextureParameter : TypedExposedParameter<RenderTexture>
     {
-        [SerializeField] RenderTexture val;
-
-        public override object value { get => val; set => val = (RenderTexture)value; }
-        public override Type GetValueType() => typeof(RenderTexture);
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
+        public override object value { get => val; set => val = (RenderTexture)value; }        
     }
 
     [System.Serializable]
-    public class MeshParameter : ExposedParameter
+    public class MeshParameter : TypedExposedParameter<Mesh>
     {
-        [SerializeField] Mesh val;
-
         public override object value { get => val; set => val = (Mesh)value; }
-        public override Type GetValueType() => typeof(Mesh);
-
-        public override bool TryReadValue<T>(out T value)
-        {
-            return BaseNode.TryConvertValue(ref val, out value);
-        }
-
-        public override bool SetValueByNode(NodePort port)
-        {
-            return port.TryReadInputValue(out val);
-        }
     }
 
     [System.Serializable]
-    public class MaterialParameter : ExposedParameter
+    public class MaterialParameter : TypedExposedParameter<Material>
     {
-        [SerializeField] Material val;
+        public override object value { get => val; set => val = (Material)value; }        
+    }
 
-        public override object value { get => val; set => val = (Material)value; }
-        public override Type GetValueType() => typeof(Material);
+    public abstract class TypedExposedParameter<T0> : ExposedParameter
+    {
+        [SerializeField] protected T0 val;
+        public override Type GetValueType() => typeof(T0);
 
         public override bool TryReadValue<T>(out T value)
         {
@@ -644,6 +390,11 @@ namespace GraphProcessor
         public override bool SetValueByNode(NodePort port)
         {
             return port.TryReadInputValue(out val);
+        }
+
+        public override bool SetValue<T>(T value)
+        {
+            return BaseNode.TryConvertValue(ref value, out val);
         }
     }
 }

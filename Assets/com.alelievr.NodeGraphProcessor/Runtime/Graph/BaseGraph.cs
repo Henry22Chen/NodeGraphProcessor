@@ -114,6 +114,8 @@ namespace GraphProcessor
 		/// <returns></returns>
 		[SerializeField, SerializeReference]
 		public List< ExposedParameter >					exposedParameters = new List< ExposedParameter >();
+		[NonSerialized]
+		Dictionary<string, ExposedParameter> parameterMapping = new Dictionary<string, ExposedParameter>();
 
 		[SerializeField, FormerlySerializedAs("exposedParameters")] // We keep this for upgrade
 		List< ExposedParameter >						serializedParameterList = new List<ExposedParameter>();
@@ -182,6 +184,12 @@ namespace GraphProcessor
 			// If you rename / change the assembly of a node or parameter, please use the MovedFrom() attribute to avoid breaking the graph.
 			nodes.RemoveAll(n => n == null);
 			exposedParameters.RemoveAll(e => e == null);
+
+			parameterMapping.Clear();
+			foreach(var i in exposedParameters)
+			{
+				parameterMapping[i.name] = i;
+			}
 
 			foreach (var node in nodes.ToList())
 			{
@@ -483,6 +491,7 @@ namespace GraphProcessor
 				// we also migrate parameters here:
 				var paramsToMigrate = serializedParameterList.ToList();
 				exposedParameters.Clear();
+				parameterMapping.Clear();
 				foreach (var param in paramsToMigrate)
 				{
 					if (param == null)
@@ -496,7 +505,10 @@ namespace GraphProcessor
 						continue;
 					}
 					else
+					{
 						exposedParameters.Add(newParam);
+                        parameterMapping[newParam.name] = newParam;
+                    }
 				}
 			}
 #pragma warning restore CS0618
@@ -561,8 +573,9 @@ namespace GraphProcessor
 			
 			param.Initialize(name, value);
 			exposedParameters.Add(param);
+            parameterMapping[param.name] = param;
 
-			onExposedParameterListChanged?.Invoke();
+            onExposedParameterListChanged?.Invoke();
 
 			return param.guid;
 		}
@@ -578,8 +591,9 @@ namespace GraphProcessor
 
 			parameter.guid = guid;
 			exposedParameters.Add(parameter);
+            parameterMapping[parameter.name] = parameter;
 
-			onExposedParameterListChanged?.Invoke();
+            onExposedParameterListChanged?.Invoke();
 
 			return guid;
 		}
@@ -591,8 +605,8 @@ namespace GraphProcessor
 		public void RemoveExposedParameter(ExposedParameter ep)
 		{
 			exposedParameters.Remove(ep);
-
-			onExposedParameterListChanged?.Invoke();
+			parameterMapping.Remove(ep.name);
+            onExposedParameterListChanged?.Invoke();
 		}
 
 		/// <summary>
@@ -669,7 +683,9 @@ namespace GraphProcessor
 		/// <returns>the parameter or null</returns>
 		public ExposedParameter GetExposedParameter(string name)
 		{
-			return exposedParameters.FirstOrDefault(e => e.name == name);
+			if (parameterMapping.TryGetValue(name, out var ep))
+				return ep;
+			return null;
 		}
 
 		/// <summary>
@@ -690,14 +706,20 @@ namespace GraphProcessor
 		/// <returns>true if the value have been assigned</returns>
 		public bool SetParameterValue(string name, object value)
 		{
-			var e = exposedParameters.FirstOrDefault(p => p.name == name);
+			if (parameterMapping.TryGetValue(name, out var ep))
+			{
+				ep.value = value;
+				return true;
+			}
 
-			if (e == null)
-				return false;
+			return false;
+		}
 
-			e.value = value;
-
-			return true;
+		public bool SetParameterValue<T>(string name, T value)
+		{
+			if (parameterMapping.TryGetValue(name, out var ep))
+				return ep.SetValue(value);
+			return false;
 		}
 
 		/// <summary>
@@ -705,7 +727,14 @@ namespace GraphProcessor
 		/// </summary>
 		/// <param name="name">parameter name</param>
 		/// <returns>value</returns>
-		public object GetParameterValue(string name) => exposedParameters.FirstOrDefault(p => p.name == name)?.value;
+		public object GetParameterValue(string name)
+		{
+            if (parameterMapping.TryGetValue(name, out var ep))
+            {
+				return ep.value;
+            }
+			return null;
+		}
 
 		/// <summary>
 		/// Get the parameter value template
@@ -713,7 +742,17 @@ namespace GraphProcessor
 		/// <param name="name">parameter name</param>
 		/// <typeparam name="T">type of the parameter</typeparam>
 		/// <returns>value</returns>
-		public T GetParameterValue< T >(string name) => (T)GetParameterValue(name);
+		public T GetParameterValue<T>(string name)
+		{
+            T val = default;
+
+            if (parameterMapping.TryGetValue(name, out var ep))
+			{
+				ep.TryReadValue(out val);
+			}
+
+            return val;
+        }
 
 		/// <summary>
 		/// Link the current graph to the scene in parameter, allowing the graph to pick and serialize objects from the scene.
