@@ -110,10 +110,37 @@ namespace GraphProcessor
 
 			RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 			RegisterCallback<DetachFromPanelEvent>(e => ExceptionToLog.Call(Disable));
+			RegisterCallback<DragExitedEvent>(e =>
+			{
+				Debug.LogError("124");
+			});
+			RegisterCallback<DragPerformEvent>(e =>
+			{
+                Debug.LogError("1244");
+            });
 			OnGeometryChanged(null);
 		}
 
-		void InitializePorts()
+        protected override void HandleEventTrickleDown(EventBase evt)
+        {
+            base.HandleEventTrickleDown(evt);
+            if (evt is DragPerformEvent)
+            {
+
+                Debug.LogError("124");
+            }
+        }
+        protected override void HandleEventBubbleUp(EventBase evt)
+        {
+            base.HandleEventBubbleUp(evt);
+			if(evt is DragPerformEvent)
+			{
+
+                Debug.LogError("124");
+            }
+        }
+
+        void InitializePorts()
 		{
 			var listener = owner.connectorListener;
 

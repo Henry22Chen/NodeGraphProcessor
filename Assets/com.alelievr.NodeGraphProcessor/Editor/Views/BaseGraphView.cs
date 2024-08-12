@@ -80,6 +80,8 @@ namespace GraphProcessor
 
 		Dictionary< Type, PinnedElementView >		pinnedElements = new Dictionary< Type, PinnedElementView >();
 
+		Dictionary<BaseNodeView, BaseStackNodeView> pendingRestoreStackInnerNode = new Dictionary<BaseNodeView, BaseStackNodeView>();
+
 		CreateNodeMenuWindow						createNodeMenu;
 
 		/// <summary>
@@ -143,6 +145,8 @@ namespace GraphProcessor
             graphViewChanged = GraphViewChangedCallback;
 			viewTransformChanged = ViewTransformChangedCallback;
             elementResized = ElementResizedCallback;
+			elementsInsertedToStackNode = ElementInsertedToStackNode;
+			elementsRemovedFromStackNode = ElementRemovedFromStackNode;			
 
 			RegisterCallback< KeyDownEvent >(KeyDownCallback);
 			RegisterCallback< DragPerformEvent >(DragPerformedCallback);
@@ -417,6 +421,59 @@ namespace GraphProcessor
 				graph.scale = viewTransform.scale;
 			}
 		}
+
+		void ElementInsertedToStackNode(StackNode stack, int index, IEnumerable<GraphElement> elements)
+		{
+			foreach (var i in elements)
+			{
+				if (i is BaseNodeView view && stack is BaseStackNodeView stackView)
+				{
+                    var compatible = NodeProvider.GetNodeCompatibleStack(view.nodeTarget.GetType(), graph);
+					if (compatible != null && compatible.Count > 0)
+					{
+						if (pendingRestoreStackInnerNode.TryGetValue(view, out var oldStack))
+						{						
+							if (oldStack == stackView)
+								pendingRestoreStackInnerNode.Remove(view);
+							else if(oldStack.CurrentDraggingOut == view)
+							{
+								oldStack.RemoveNode(view.nodeTarget); 
+							}
+						}
+					}
+				}
+			}
+		}
+
+		void ElementRemovedFromStackNode(StackNode stack, IEnumerable<GraphElement> elements)
+		{
+            foreach (var i in elements)
+            {
+                if (i is BaseNodeView view && stack is BaseStackNodeView stackView)
+                {
+					if (stackView.CurrentDraggingOut == view)
+					{
+						var compatible = NodeProvider.GetNodeCompatibleStack(view.nodeTarget.GetType(), graph);
+						if (compatible != null && compatible.Count > 0)
+						{
+							//this node cannot be draged outside of its stack node
+							pendingRestoreStackInnerNode[view] = stackView;
+							schedule.Execute(() =>
+							{
+								if (pendingRestoreStackInnerNode.Remove(view))
+								{
+									stackView.RestoreNode(view);
+								}
+							}).ExecuteLater(1);
+						}
+						else
+						{
+							stackView.RemoveNode(view.nodeTarget);
+						}
+					}
+                }
+            }
+        }
 
         void ElementResizedCallback(VisualElement elem)
         {
@@ -759,6 +816,8 @@ namespace GraphProcessor
 
 			ClearGraphElements();
 
+			NodeProvider.LoadGraph(graph);
+
 			InitializeGraphView();
 			InitializeNodeViews();
 			InitializeEdgeViews();
@@ -771,8 +830,6 @@ namespace GraphProcessor
 			UpdateComputeOrder();
 
 			InitializeView();
-
-			NodeProvider.LoadGraph(graph);
 
 			// Register the nodes that can be created from assets
 			foreach (var nodeInfo in NodeProvider.GetNodeMenuEntries(graph))
@@ -829,7 +886,11 @@ namespace GraphProcessor
 			graph.onGraphChanges += GraphChangesCallback;
 			viewTransform.position = graph.position;
 			viewTransform.scale = graph.scale;
-			nodeCreationRequest = (c) => SearchWindow.Open(new SearchWindowContext(c.screenMousePosition), createNodeMenu);
+			nodeCreationRequest = (c) =>
+			{
+				createNodeMenu.SetCurrentTarget(c.target, c.index);
+				SearchWindow.Open(new SearchWindowContext(c.screenMousePosition), createNodeMenu);
+			};
 		}
 
 		void OnExposedParameterListChanged()
@@ -1364,10 +1425,10 @@ namespace GraphProcessor
 
 		protected virtual void InitializeView() {}
 
-		public virtual IEnumerable<(string path, Type type)> FilterCreateNodeMenuEntries()
+		public virtual IEnumerable<(string path, Type type)> FilterCreateNodeMenuEntries(Type specificStackNode)
 		{
 			// By default we don't filter anything
-			foreach (var nodeMenuItem in NodeProvider.GetNodeMenuEntries(graph))
+			foreach (var nodeMenuItem in NodeProvider.GetNodeMenuEntries(graph, specificStackNode))
 				yield return nodeMenuItem;
 
 			// TODO: add exposed properties to this list

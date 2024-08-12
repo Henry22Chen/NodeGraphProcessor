@@ -29,14 +29,15 @@ namespace GraphProcessor
 		{
 			public Dictionary< string, Type >		nodePerMenuTitle = new Dictionary< string, Type >();
 			public List< Type >						slotTypes = new List< Type >();
-			public List< PortDescription >			nodeCreatePortDescription = new List<PortDescription>();
+			public Dictionary<Type, List<Type>> compatibleWithStackNodeType = new Dictionary< Type, List<Type>>();
+            public List< PortDescription >			nodeCreatePortDescription = new List<PortDescription>();
 		}
 
 		public struct NodeSpecificToGraph
 		{
 			public Type				nodeType;
-			public List<MethodInfo>	isCompatibleWithGraph;
 			public Type				compatibleWithGraphType;
+			public List<Type> compatibleWithStackNodeType;
 		} 
 
 		static Dictionary<BaseGraph, NodeDescriptions>	specificNodeDescriptions = new Dictionary<BaseGraph, NodeDescriptions>();
@@ -62,14 +63,8 @@ namespace GraphProcessor
 			{
 				bool compatible = nodeInfo.compatibleWithGraphType == null || nodeInfo.compatibleWithGraphType == graphType;
 
-				if (nodeInfo.isCompatibleWithGraph != null)
-				{
-					foreach (var method in nodeInfo.isCompatibleWithGraph)
-						compatible &= (bool)method?.Invoke(null, new object[]{ graph });
-				}
-
 				if (compatible)
-					BuildCacheForNode(nodeInfo.nodeType, descriptions, graph);
+					BuildCacheForNode(nodeInfo.nodeType, descriptions, nodeInfo.compatibleWithStackNodeType, graph);
 			}
 		}
 
@@ -92,7 +87,7 @@ namespace GraphProcessor
 			}
 		}
 
-		static void BuildCacheForNode(Type nodeType, NodeDescriptions targetDescription, BaseGraph graph = null)
+		static void BuildCacheForNode(Type nodeType, NodeDescriptions targetDescription, List<Type> specificStackNode = null, BaseGraph graph = null)
 		{
 			var attrs = nodeType.GetCustomAttributes(typeof(NodeMenuItemAttribute), false) as NodeMenuItemAttribute[];
 
@@ -107,7 +102,8 @@ namespace GraphProcessor
 				if (field.GetCustomAttribute<HideInInspector>() == null && field.GetCustomAttributes().Any(c => c is InputAttribute || c is OutputAttribute))
 					targetDescription.slotTypes.Add(field.FieldType);
 			}
-
+			if (specificStackNode != null)
+				targetDescription.compatibleWithStackNodeType[nodeType] = specificStackNode;
 			ProvideNodePortCreationDescription(nodeType, targetDescription, graph);
 		}
 
@@ -122,23 +118,13 @@ namespace GraphProcessor
 		// Check if node has anything that depends on the graph type or settings
 		static bool IsNodeSpecificToGraph(Type nodeType)
 		{
-			var isCompatibleWithGraphMethods = nodeType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy).Where(m => m.GetCustomAttribute<IsCompatibleWithGraph>() != null);
-			var nodeMenuAttributes = nodeType.GetCustomAttributes<NodeMenuItemAttribute>();
+			var nodeMenuAttributes = nodeType.GetCustomAttributes<IsCompatibleWithGraph>();
+			var stackNodeAttributes = nodeType.GetCustomAttributes<IsCompatibleWithStack>();
 
-			List<Type> compatibleGraphTypes = nodeMenuAttributes.Where(n => n.onlyCompatibleWithGraph != null).Select(a => a.onlyCompatibleWithGraph).ToList();
+			List<Type> compatibleGraphTypes = nodeMenuAttributes.Where(n => n.GraphType != null).Select(a => a.GraphType).ToList();
+			List<Type> compatibleStackNodes = stackNodeAttributes.Where(n => n.StackNodeType != null).Select(a => a.StackNodeType).ToList();
 
-			List<MethodInfo> compatibleMethods = new List<MethodInfo>();
-			foreach (var method in isCompatibleWithGraphMethods)
-			{
-				// Check if the method is static and have the correct prototype
-				var p = method.GetParameters();
-				if (method.ReturnType != typeof(bool) || p.Count() != 1 || p[0].ParameterType != typeof(BaseGraph))
-					Debug.LogError($"The function '{method.Name}' marked with the IsCompatibleWithGraph attribute either doesn't return a boolean or doesn't take one parameter of BaseGraph type.");
-				else
-					compatibleMethods.Add(method);
-			}
-
-			if (compatibleMethods.Count > 0 || compatibleGraphTypes.Count > 0)
+            if (compatibleStackNodes.Count > 0 ||compatibleGraphTypes.Count > 0)
 			{
 				// We still need to add the element in specificNode even without specific graph
 				if (compatibleGraphTypes.Count == 0)
@@ -148,8 +134,8 @@ namespace GraphProcessor
 				{
 					specificNodes.Add(new NodeSpecificToGraph{
 						nodeType = nodeType,
-						isCompatibleWithGraph = compatibleMethods,
-						compatibleWithGraphType = graphType
+						compatibleWithGraphType = graphType,
+						compatibleWithStackNodeType = compatibleStackNodes
 					});
 				}
 				return true;
@@ -275,15 +261,33 @@ namespace GraphProcessor
             return view;
         }
 
-        public static IEnumerable<(string path, Type type)>	GetNodeMenuEntries(BaseGraph graph = null)
+		public static List<Type> GetNodeCompatibleStack(Type nodeType, BaseGraph graph = null)
 		{
-			foreach (var node in genericNodes.nodePerMenuTitle)
-				yield return (node.Key, node.Value);
+			if (graph != null && specificNodeDescriptions.TryGetValue(graph, out var specificNodes))
+			{
+				List<Type> compatibleStacks;
+				if (specificNodes.compatibleWithStackNodeType.TryGetValue(nodeType, out compatibleStacks))
+					return compatibleStacks;
+			}
+			return null;
+        }
 
+		public static IEnumerable<(string path, Type type)> GetNodeMenuEntries(BaseGraph graph = null, Type specificStackNode = null)
+		{
+			if (specificStackNode == null)
+			{
+				foreach (var node in genericNodes.nodePerMenuTitle)
+					yield return (node.Key, node.Value);
+			}
 			if (graph != null && specificNodeDescriptions.TryGetValue(graph, out var specificNodes))
 			{
 				foreach (var node in specificNodes.nodePerMenuTitle)
-					yield return (node.Key, node.Value);
+				{
+					List<Type> compatibleStacks;
+					specificNodes.compatibleWithStackNodeType.TryGetValue(node.Value, out compatibleStacks);
+					if (specificStackNode == null || (compatibleStacks != null && compatibleStacks.Contains(specificStackNode)))
+						yield return (node.Key, node.Value);
+				}
 			}
 		}
 

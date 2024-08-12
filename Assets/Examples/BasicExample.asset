@@ -51,6 +51,9 @@ MonoBehaviour:
   - rid: 3729079658954621233
   - rid: 3729079658954621234
   - rid: 3729079658954621354
+  - rid: 3729079658954621824
+  - rid: 3729079726891598150
+  - rid: 3729079726891598151
   edges:
   - GUID: e83acc94-1adc-4b71-9098-68669183f86c
     owner: {fileID: 11400000}
@@ -211,6 +214,8 @@ MonoBehaviour:
     innerNodeGUIDs: []
   stackNodes:
   - rid: 24
+  - rid: 3729079658954621728
+  - rid: 3729079726891598101
   pinnedElements:
   - position:
       serializedVersion: 2
@@ -284,8 +289,8 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 488, y: -841, z: 0}
-  scale: {x: 0.8695652, y: 0.8695652, z: 1}
+  position: {x: 1218, y: 347, z: 0}
+  scale: {x: 0.7561437, y: 0.7561437, z: 1}
   references:
     version: 2
     RefIds:
@@ -364,8 +369,8 @@ MonoBehaviour:
         computeOrder: 4
         position:
           serializedVersion: 2
-          x: 955
-          y: 18
+          x: -753.0226
+          y: -108.87
           width: 103
           height: 103
         expanded: 0
@@ -394,8 +399,8 @@ MonoBehaviour:
         computeOrder: 6
         position:
           serializedVersion: 2
-          x: 844.85004
-          y: -100.600006
+          x: -803.43744
+          y: -161.2199
           width: 136
           height: 223
         expanded: 1
@@ -411,10 +416,10 @@ MonoBehaviour:
         computeOrder: 7
         position:
           serializedVersion: 2
-          x: 931.29004
-          y: 381.58002
-          width: 136
-          height: 101.000015
+          x: -830.9999
+          y: -193.49998
+          width: 102
+          height: 99
         expanded: 1
         debug: 0
         nodeLock: 0
@@ -693,13 +698,15 @@ MonoBehaviour:
     - rid: 24
       type: {class: BaseStackNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
-        position: {x: 1050.0002, y: -201.00003}
+        position: {x: -831.1851, y: -320.84006}
         title: Stack
         acceptDrop: 1
         acceptNewNode: 1
         nodeGUIDs:
-        - 42eb43b8-ac7e-4f38-b49b-26ba1bc42732
         - e99da4fb-6a11-4b19-8594-f37f55d96114
+        - ffd2cf4b-87c3-42a6-9822-04bae7a5700b
+        - a5c02214-b205-423d-b697-d2dd3165af40
+        - 42eb43b8-ac7e-4f38-b49b-26ba1bc42732
     - rid: 25
       type: {class: FloatParameter, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
@@ -783,8 +790,8 @@ MonoBehaviour:
         computeOrder: 26
         position:
           serializedVersion: 2
-          x: -179.0325
-          y: 117.00001
+          x: -624
+          y: -250.99995
           width: 202
           height: 94
         expanded: 0
@@ -992,7 +999,7 @@ MonoBehaviour:
         input: 1
         settings:
           rid: 3729079658954621349
-        val: 0
+        val: 252.4
     - rid: 3729079658954621349
       type: {class: FloatParameter/FloatSettings, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
@@ -1010,8 +1017,8 @@ MonoBehaviour:
         computeOrder: 36
         position:
           serializedVersion: 2
-          x: 349.40002
-          y: 1355.0002
+          x: 384.3
+          y: 1344.6501
           width: 101
           height: 37
         expanded: 0
@@ -1019,3 +1026,71 @@ MonoBehaviour:
         nodeLock: 0
         parameterGUID: e3d4b22f-14b4-4952-9e9d-4f7ef26a91fe
         accessor: 1
+    - rid: 3729079658954621728
+      type: {class: NonGenericStackNode, ns: , asm: Assembly-CSharp}
+      data:
+        position: {x: -1165.84, y: -198.50005}
+        title: NG Stack
+        acceptDrop: 0
+        acceptNewNode: 1
+        nodeGUIDs:
+        - 9f4997d3-ed71-412f-84ff-7ef501088852
+        - f7868bc8-a73a-4135-b369-19ee9b5a0a8b
+    - rid: 3729079658954621824
+      type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
+      data:
+        nodeCustomName: 
+        GUID: 5f15b8e3-1778-4dcd-804e-587aabd33244
+        computeOrder: 37
+        position:
+          serializedVersion: 2
+          x: -917
+          y: 310.50003
+          width: 91
+          height: 37
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        parameterGUID: eb80df62-f248-4ec9-afd4-f9ed08bfaa16
+        accessor: 0
+    - rid: 3729079726891598101
+      type: {class: NonGenericStackNode, ns: , asm: Assembly-CSharp}
+      data:
+        position: {x: -1187, y: 29.560013}
+        title: NG Stack
+        acceptDrop: 0
+        acceptNewNode: 1
+        nodeGUIDs:
+        - f7868bc8-a73a-4135-b369-19ee9b5a0a8b
+    - rid: 3729079726891598150
+      type: {class: StackTextNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: 9f4997d3-ed71-412f-84ff-7ef501088852
+        computeOrder: 38
+        position:
+          serializedVersion: 2
+          x: -783.7
+          y: -108.29003
+          width: 146
+          height: 61
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        text: 
+    - rid: 3729079726891598151
+      type: {class: StackTextNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: f7868bc8-a73a-4135-b369-19ee9b5a0a8b
+        computeOrder: 39
+        position:
+          serializedVersion: 2
+          x: -1159.29
+          y: 63.634964
+          width: 201
+          height: 61
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        text: fsdgasdga

@@ -25,6 +25,8 @@ namespace GraphProcessor
         /// <summary>Triggered when a node is re-ordered in the stack.</summary>
         public event ReorderNodeAction      onNodeReordered;
 
+        internal BaseNodeView CurrentDraggingOut { get; set; }
+
         public BaseStackNodeView(BaseStackNode stackNode)
         {
             this.stackNode = stackNode;
@@ -83,11 +85,19 @@ namespace GraphProcessor
         /// <inheritdoc />
         protected override bool AcceptsElement(GraphElement element, ref int proposedIndex, int maxIndex)
         {
+            BaseNodeView nodeView = element as BaseNodeView;
+            if (nodeView != null)
+            {
+                var arr = NodeProvider.GetNodeCompatibleStack(nodeView.nodeTarget.GetType(), owner.graph);
+                if (arr != null && !arr.Contains(stackNode.GetType()))
+                    return false;
+            }
+
             bool accept = base.AcceptsElement(element, ref proposedIndex, maxIndex);
 
-            if (accept && element is BaseNodeView nodeView)
+            if (accept && nodeView != null)
             {
-                var index = Mathf.Clamp(proposedIndex, 0, stackNode.nodeGUIDs.Count - 1);
+                var index = Mathf.Clamp(proposedIndex, 0, Mathf.Max(stackNode.nodeGUIDs.Count - 1, 0));
 
                 int oldIndex = stackNode.nodeGUIDs.FindIndex(g => g == nodeView.nodeTarget.GUID);
                 if (oldIndex != -1)
@@ -103,14 +113,58 @@ namespace GraphProcessor
             return accept;
         }
 
+        public void AddNode(GraphElement element, ref int proposedIndex)
+        {
+            if (element is BaseNodeView nodeView)
+            {
+                var index = Mathf.Clamp(proposedIndex, 0, Mathf.Max(stackNode.nodeGUIDs.Count - 1, 0));
+                stackNode.nodeGUIDs.Insert(index, nodeView.nodeTarget.GUID);
+                InsertElement(index, element);
+            }
+        }
+
+        public void RemoveNode(BaseNode node)
+        {
+            stackNode.nodeGUIDs.Remove(node.GUID);
+        }
+
+        public void RestoreNode(BaseNodeView nodeView)
+        {
+            int index = Mathf.Min(stackNode.nodeGUIDs.IndexOf(nodeView.nodeTarget.GUID), childCount - 1);
+            if(index >= 0)
+            {
+                InsertElement(index, nodeView);
+            }
+        }
+
+        public override void OnStartDragging(GraphElement ge)
+        {
+            CurrentDraggingOut = null;
+
+            base.OnStartDragging(ge);
+        }
+
         public override bool DragLeave(DragLeaveEvent evt, IEnumerable<ISelectable> selection, IDropTarget leftTarget, ISelection dragSource)
         {
             foreach (var elem in selection)
             {
-                if (elem is BaseNodeView nodeView)
-                    stackNode.nodeGUIDs.Remove(nodeView.nodeTarget.GUID);
+                if(elem is BaseNodeView nodeView)
+                {
+                    CurrentDraggingOut = nodeView;
+                }
             }
             return base.DragLeave(evt, selection, leftTarget, dragSource);
+        }
+
+        public override bool DragPerform(DragPerformEvent evt, IEnumerable<ISelectable> selection, IDropTarget dropTarget, ISelection dragSource)
+        {
+            CurrentDraggingOut = null;
+            return base.DragPerform(evt, selection, dropTarget, dragSource);
+        }
+
+        protected override void HandleEventBubbleUp(EventBase evt)
+        {
+            base.HandleEventBubbleUp(evt);
         }
     }
 }

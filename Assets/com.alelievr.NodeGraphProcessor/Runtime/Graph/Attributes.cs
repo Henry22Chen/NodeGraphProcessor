@@ -152,6 +152,25 @@ namespace GraphProcessor
 		}
 	}
 
-	[AttributeUsage(AttributeTargets.Method)]
-	public class IsCompatibleWithGraph : Attribute {}
+	[AttributeUsage(AttributeTargets.Class)]
+	public class IsCompatibleWithGraph : Attribute
+	{
+		public Type GraphType { get; private set; }
+
+		public IsCompatibleWithGraph(Type graphType)
+		{
+			GraphType = graphType;
+		}
+	}
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class IsCompatibleWithStack : Attribute
+    {
+        public Type StackNodeType { get; private set; }
+
+        public IsCompatibleWithStack(Type stackNodeType)
+        {
+            StackNodeType = stackNodeType;
+        }
+    }
 }

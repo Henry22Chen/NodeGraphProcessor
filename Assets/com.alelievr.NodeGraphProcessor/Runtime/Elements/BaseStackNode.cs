@@ -29,6 +29,8 @@ namespace GraphProcessor
         /// <returns></returns>
         public List< string >   nodeGUIDs = new List< string >();
 
+        public virtual bool AcceptAllNodes => true;
+
         public BaseStackNode(Vector2 position, string title = "Stack", bool acceptDrop = true, bool acceptNewNode = true)
         {
             this.position = position;

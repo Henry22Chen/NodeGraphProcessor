@@ -24,5 +24,6 @@ public class AllGraphView : BaseGraphView
 	{
 		Vector2 position = (evt.currentTarget as VisualElement).ChangeCoordinatesTo(contentViewContainer, evt.localMousePosition);
 		evt.menu.AppendAction("New Stack", (e) => AddStackNode(new BaseStackNode(position)), DropdownMenuAction.AlwaysEnabled);
-	}
+        evt.menu.AppendAction("New NG Stack", (e) => AddStackNode(new NonGenericStackNode(position)), DropdownMenuAction.AlwaysEnabled);
+    }
 }

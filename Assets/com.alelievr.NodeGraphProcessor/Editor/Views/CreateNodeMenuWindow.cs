@@ -19,6 +19,8 @@ namespace GraphProcessor
         EdgeView        edgeFilter;
         PortView        inputPortView;
         PortView        outputPortView;
+        BaseStackNodeView currentStackNode;
+        int currentStackIndex;
 
         public void Initialize(BaseGraphView graphView, EditorWindow window, EdgeView edgeFilter = null)
         {
@@ -27,12 +29,31 @@ namespace GraphProcessor
             this.edgeFilter = edgeFilter;
             this.inputPortView = edgeFilter?.input as PortView;
             this.outputPortView = edgeFilter?.output as PortView;
+            currentStackNode = null;
+            currentStackIndex = -1;
 
             // Transparent icon to trick search window into indenting items
             if (icon == null)
                 icon = new Texture2D(1, 1);
             icon.SetPixel(0, 0, new Color(0, 0, 0, 0));
             icon.Apply();
+        }
+
+        public void SetCurrentTarget(VisualElement ve, int stackIndex)
+        {
+            if(ve is BaseStackNodeView stack)
+            {
+                if (!stack.stackNode.AcceptAllNodes)
+                {
+                    currentStackNode = stack;
+                    currentStackIndex = stackIndex;
+                }
+            }
+            else
+            {
+                currentStackNode = null;
+                currentStackIndex = -1;
+            }
         }
 
         void OnDestroy()
@@ -62,7 +83,7 @@ namespace GraphProcessor
         void CreateStandardNodeMenu(List<SearchTreeEntry> tree)
         {
             // Sort menu by alphabetical order and submenus
-            var nodeEntries = graphView.FilterCreateNodeMenuEntries().OrderBy(k => k.path);
+            var nodeEntries = graphView.FilterCreateNodeMenuEntries(currentStackNode.stackNode?.GetType()).OrderBy(k => k.path);
             var titlePaths = new HashSet< string >();
             
 			foreach (var nodeMenuItem in nodeEntries)
@@ -181,8 +202,12 @@ namespace GraphProcessor
             var nodeType = searchTreeEntry.userData is Type ? (Type)searchTreeEntry.userData : ((NodeProvider.PortDescription)searchTreeEntry.userData).nodeType;
             
             graphView.RegisterCompleteObjectUndo("Added " + nodeType);
-            var view = graphView.AddNode(BaseNode.CreateFromType(nodeType, graphMousePosition));
-
+            var node = BaseNode.CreateFromType(nodeType, graphMousePosition);
+            var view = graphView.AddNode(node);
+            if (currentStackNode != null)
+            {
+                currentStackNode.AddNode(view, ref currentStackIndex);
+            }
             if (searchTreeEntry.userData is NodeProvider.PortDescription desc)
             {
                 var targetPort = view.GetPortViewFromFieldName(desc.portFieldName, desc.portIdentifier);
