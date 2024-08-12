@@ -13,7 +13,7 @@ namespace GraphProcessor
 		public string				fieldName => fieldInfo?.Name;
 		public Type					fieldType => fieldInfo?.FieldType; 
 		public new Type				portType;
-        public BaseNodeView     	owner { get; private set; }
+        public IConnectable owner { get; private set; }
 		public PortData				portData;
 
 		public event Action< PortView, Edge >	OnConnected;
@@ -106,7 +106,7 @@ namespace GraphProcessor
 			edges.ForEach(e => e.UpdateEdgeSize());
 		}
 
-		public virtual void Initialize(BaseNodeView nodeView, string name)
+		public virtual void Initialize(IConnectable nodeView, string name)
 		{
 			this.owner = nodeView;
 			AddToClassList(fieldName);

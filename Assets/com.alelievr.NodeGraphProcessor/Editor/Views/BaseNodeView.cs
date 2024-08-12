@@ -15,9 +15,19 @@ using NodeView = UnityEditor.Experimental.GraphView.Node;
 
 namespace GraphProcessor
 {
-	[NodeCustomEditor(typeof(BaseNode))]
-	public class BaseNodeView : NodeView
+	public interface IConnectable
 	{
+		public void OnPortConnected(PortView port);
+		public void OnPortDisconnected(PortView port);
+		public BaseGraphView owner { get; }
+		public VisualElement parent { get; }
+		public NodePort GetPort(string fieldName, int identifier);
+		public PortView GetPortViewFromFieldName(string fieldName, int identifier);
+		public bool RefreshPorts();
+    }
+	[NodeCustomEditor(typeof(BaseNode))]
+	public class BaseNodeView : NodeView, IConnectable
+    {
 		public BaseNode							nodeTarget;
 
 		public List< PortView >					inputPortViews = new List< PortView >();
@@ -364,7 +374,13 @@ namespace GraphProcessor
 			}
 		}
 
-		public PortView GetPortViewFromNodePort(NodePort port)
+        public NodePort GetPort(string fieldName, int identifier)
+		{
+			return nodeTarget.GetPort(fieldName, identifier);
+		}
+
+
+        public PortView GetPortViewFromNodePort(NodePort port)
 		{
 			portsPerNodePort.TryGetValue(port, out var view);
 			return view;
@@ -1026,7 +1042,7 @@ namespace GraphProcessor
 			}
 		}
 
-		internal void OnPortConnected(PortView port)
+		public void OnPortConnected(PortView port)
 		{
 			string portName = port.GetPortName();
 			if(port.direction == Direction.Input && inputContainerElement?.Q(portName) != null)
@@ -1038,7 +1054,7 @@ namespace GraphProcessor
 			onPortConnected?.Invoke(port);
 		}
 
-		internal void OnPortDisconnected(PortView port)
+		public void OnPortDisconnected(PortView port)
 		{
             string portName = port.GetPortName();
 

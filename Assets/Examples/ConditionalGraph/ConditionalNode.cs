@@ -18,7 +18,7 @@ namespace NodeGraphProcessor.Examples
 		[Input(name = "Executed", allowMultiple = true)]
 		public ConditionalLink	executed;
 
-		public abstract IEnumerable< ConditionalNode >	GetExecutedNodes();
+		public abstract IEnumerable<IConditionalNode>	GetExecutedNodes();
 
 		// Assure that the executed field is always at the top of the node port section
 		public override FieldInfo[] GetNodeFields()
@@ -38,7 +38,7 @@ namespace NodeGraphProcessor.Examples
 		[Output(name = "Executes")]
 		public ConditionalLink	executes;
 
-		public override IEnumerable< ConditionalNode >	GetExecutedNodes()
+		public override IEnumerable<IConditionalNode>	GetExecutedNodes()
 		{
 			// Return all the nodes connected to the executes port
 			return outputPorts.FirstOrDefault(n => n.fieldName == nameof(executes))
@@ -63,7 +63,7 @@ namespace NodeGraphProcessor.Examples
 		[HideInInspector]
 		public Action<WaitableNode> onProcessFinished;
 
-		public IEnumerable< ConditionalNode > GetExecuteAfterNodes()
+		public IEnumerable<IConditionalNode> GetExecuteAfterNodes()
 		{
 			return outputPorts.FirstOrDefault(n => n.fieldName == nameof(executeAfter))
 			                  .GetEdges().Select(e => e.inputNode as ConditionalNode);

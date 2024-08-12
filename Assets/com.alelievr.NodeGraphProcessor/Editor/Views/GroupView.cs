@@ -61,7 +61,7 @@ namespace GraphProcessor
                     continue ;
                 }
                 var node = owner.graph.nodesPerGUID[nodeGUID];
-                var nodeView = owner.nodeViewsPerNode[node];
+                var nodeView = owner.nodeViewsPerNode[node] as GraphElement;
 
                 AddElement(nodeView);
             }

@@ -22,7 +22,7 @@ public class IfNode : ConditionalNode
 
 	public override string		name => "If";
 
-	public override IEnumerable< ConditionalNode >	GetExecutedNodes()
+	public override IEnumerable<IConditionalNode>	GetExecutedNodes()
 	{
 		string fieldName = condition ? nameof(@true) : nameof(@false);
 

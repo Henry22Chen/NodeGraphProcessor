@@ -195,9 +195,15 @@ namespace GraphProcessor
 			{
 				nodesPerGUID[node.GUID] = node;
 				node.Initialize(this);
-			}
+            }
 
-			foreach (var edge in edges.ToList())
+            foreach (var stackNode in stackNodes.ToList())
+            {
+                nodesPerGUID[stackNode.GUID] = stackNode;
+                stackNode.Initialize(this); 
+            }
+
+            foreach (var edge in edges.ToList())
 			{
 				edge.Deserialize();
 				edgesPerGUID[edge.GUID] = edge;
@@ -205,7 +211,7 @@ namespace GraphProcessor
 				// Sanity check for the edge:
 				if (edge.inputPort == null || edge.outputPort == null)
 				{
-					Disconnect(edge.GUID);
+					Disconnect(edge.GUID); 
 					continue;
 				}
 

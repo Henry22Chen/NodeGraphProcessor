@@ -18,7 +18,7 @@ namespace GraphProcessor
         internal const float k_MaxPanSpeed = k_MaxSpeedFactor * k_PanSpeed;
         internal const float kPortDetectionWidth = 30;
 
-        protected Dictionary<BaseNodeView, List<PortView>> compatiblePorts = new Dictionary<BaseNodeView, List<PortView>>();
+        protected Dictionary<IConnectable, List<PortView>> compatiblePorts = new Dictionary<IConnectable, List<PortView>>();
         private Edge ghostEdge;
         protected GraphView graphView;
         protected static NodeAdapter nodeAdapter = new NodeAdapter();
@@ -359,7 +359,7 @@ namespace GraphProcessor
             Reset(didConnect);
         }
 
-        Rect GetPortBounds(BaseNodeView nodeView, int index, List<PortView> portList)
+        Rect GetPortBounds(VisualElement nodeView, int index, List<PortView> portList)
         {
             var port = portList[index];
             var bounds = port.worldBound;
@@ -420,7 +420,7 @@ namespace GraphProcessor
                 for (int i = 0; i < portList.Count; i++)
                 {
                     var port = portList[i];
-                    Rect bounds = GetPortBounds(nodeView, i, portList);
+                    Rect bounds = GetPortBounds(nodeView as VisualElement, i, portList);
 
                     float distance = Vector2.Distance(port.worldBound.position, mousePosition);
 

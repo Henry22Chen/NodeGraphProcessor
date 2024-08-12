@@ -7,11 +7,8 @@ namespace GraphProcessor
     /// Data container for the StackNode views
     /// </summary>
     [System.Serializable]
-    public class BaseStackNode
+    public class BaseStackNode : BaseNode
     {
-        public Vector2 position;
-        public string title = "New Stack";
-        
         /// <summary>
         /// Is the stack accept drag and dropped nodes
         /// </summary>
@@ -31,12 +28,23 @@ namespace GraphProcessor
 
         public virtual bool AcceptAllNodes => true;
 
-        public BaseStackNode(Vector2 position, string title = "Stack", bool acceptDrop = true, bool acceptNewNode = true)
+        public override string name => "Stack";
+
+        public BaseStackNode(Rect position, bool acceptDrop = true, bool acceptNewNode = true)
+            :this()
         {
             this.position = position;
-            this.title = title;
             this.acceptDrop = acceptDrop;
             this.acceptNewNode = acceptNewNode;
+        }
+
+        public BaseStackNode() : base()
+        {
+        }
+
+        protected override void Process()
+        {
+            base.Process();
         }
     }
 }

@@ -23,7 +23,7 @@ public class AllGraphView : BaseGraphView
 	protected void BuildStackNodeContextualMenu(ContextualMenuPopulateEvent evt)
 	{
 		Vector2 position = (evt.currentTarget as VisualElement).ChangeCoordinatesTo(contentViewContainer, evt.localMousePosition);
-		evt.menu.AppendAction("New Stack", (e) => AddStackNode(new BaseStackNode(position)), DropdownMenuAction.AlwaysEnabled);
-        evt.menu.AppendAction("New NG Stack", (e) => AddStackNode(new NonGenericStackNode(position)), DropdownMenuAction.AlwaysEnabled);
+		evt.menu.AppendAction("New Stack", (e) => AddStackNode(new BaseStackNode(new Rect(position, Vector2.one))), DropdownMenuAction.AlwaysEnabled);
+        evt.menu.AppendAction("New NG Stack", (e) => AddStackNode(new NonGenericStackNode(new Rect(position, Vector2.one))), DropdownMenuAction.AlwaysEnabled);
     }
 }

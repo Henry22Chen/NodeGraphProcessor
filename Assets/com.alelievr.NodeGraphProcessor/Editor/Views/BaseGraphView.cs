@@ -46,7 +46,7 @@ namespace GraphProcessor
 		/// <typeparam name="BaseNode"></typeparam>
 		/// <typeparam name="BaseNodeView"></typeparam>
 		/// <returns></returns>
-		public Dictionary< BaseNode, BaseNodeView >	nodeViewsPerNode = new Dictionary< BaseNode, BaseNodeView >();
+		public Dictionary< BaseNode, IConnectable >	nodeViewsPerNode = new Dictionary< BaseNode, IConnectable>();
 
 		/// <summary>
 		/// List of all edge views in the graph
@@ -260,7 +260,7 @@ namespace GraphProcessor
 				copiedNodesMap[sourceGUID] = node;
 
 				//Select the new node
-				AddToSelection(nodeViewsPerNode[node]);
+				AddToSelection((ISelectable)nodeViewsPerNode[node]);
 			}
 
             foreach (var group in unserializedGroups)
@@ -823,11 +823,11 @@ namespace GraphProcessor
 
 			InitializeGraphView();
 			InitializeNodeViews();
-			InitializeEdgeViews();
+            InitializeStackNodes();
+            InitializeEdgeViews();
 			InitializeViews();
             InitializeGroups();
 			InitializeStickyNotes();
-			InitializeStackNodes();
 
 			initialized?.Invoke();
 			UpdateComputeOrder();
@@ -1035,11 +1035,19 @@ namespace GraphProcessor
 			graph.RemoveNode(node);
 		}
 
-		public void RemoveNodeView(BaseNodeView nodeView)
+		public void RemoveNodeView(IConnectable con)
 		{
-			RemoveElement(nodeView);
-			nodeViews.Remove(nodeView);
-			nodeViewsPerNode.Remove(nodeView.nodeTarget);
+			RemoveElement((GraphElement)con);
+			if (con is BaseNodeView nodeView)
+			{
+				nodeViews.Remove(nodeView);
+				nodeViewsPerNode.Remove(nodeView.nodeTarget);
+			}
+			if(con is BaseStackNodeView stack)
+			{
+				stackNodeViews.Remove(stack);
+				nodeViewsPerNode.Remove(stack.stackNode);
+			}
 		}
 
 		void RemoveNodeViews()
@@ -1088,8 +1096,10 @@ namespace GraphProcessor
 
 		public BaseStackNodeView AddStackNode(BaseStackNode stackNode)
 		{
-			graph.AddStackNode(stackNode);
-			return AddStackNodeView(stackNode);
+            stackNode.Initialize(graph);
+            graph.AddStackNode(stackNode);
+            stackNode.OnNodeCreated();
+            return AddStackNodeView(stackNode);
 		}
 
 		public BaseStackNodeView AddStackNodeView(BaseStackNode stackNode)
@@ -1100,7 +1110,8 @@ namespace GraphProcessor
 			AddElement(stackView);
 			stackNodeViews.Add(stackView);
 
-			stackView.Initialize(this);
+            nodeViewsPerNode[stackNode] = stackView;
+            stackView.Initialize(this);
 
 			return stackView;
 		}
@@ -1172,8 +1183,8 @@ namespace GraphProcessor
 
 			var inputPortView = e.input as PortView;
 			var outputPortView = e.output as PortView;
-			var inputNodeView = inputPortView.node as BaseNodeView;
-			var outputNodeView = outputPortView.node as BaseNodeView;
+			var inputNodeView = inputPortView.node as IConnectable;
+			var outputNodeView = outputPortView.node as IConnectable;
 
 			if (inputNodeView == null || outputNodeView == null)
 			{
@@ -1191,8 +1202,8 @@ namespace GraphProcessor
 			
 			var inputPortView = e.input as PortView;
 			var outputPortView = e.output as PortView;
-			var inputNodeView = inputPortView.node as BaseNodeView;
-			var outputNodeView = outputPortView.node as BaseNodeView;
+			var inputNodeView = inputPortView.node as IConnectable;
+			var outputNodeView = outputPortView.node as IConnectable;
 
 			//If the input port does not support multi-connection, we remove them
 			if (autoDisconnectInputs && !(e.input as PortView).portData.acceptMultipleEdges)
@@ -1242,8 +1253,8 @@ namespace GraphProcessor
 
 		public bool Connect(PortView inputPortView, PortView outputPortView, bool autoDisconnectInputs = true)
 		{
-			var inputPort = inputPortView.owner.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
-			var outputPort = outputPortView.owner.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
+			var inputPort = inputPortView.owner.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
+			var outputPort = outputPortView.owner.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
 
 			// Checks that the node we are connecting still exists
 			if (inputPortView.owner.parent == null || outputPortView.owner.parent == null)
@@ -1267,10 +1278,10 @@ namespace GraphProcessor
 
 			var inputPortView = e.input as PortView;
 			var outputPortView = e.output as PortView;
-			var inputNodeView = inputPortView.node as BaseNodeView;
-			var outputNodeView = outputPortView.node as BaseNodeView;
-			var inputPort = inputNodeView.nodeTarget.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
-			var outputPort = outputNodeView.nodeTarget.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
+			var inputNodeView = inputPortView.node as IConnectable;
+			var outputNodeView = outputPortView.node as IConnectable;
+			var inputPort = inputNodeView.GetPort(inputPortView.fieldName, inputPortView.portData.identifier);
+			var outputPort = outputNodeView.GetPort(outputPortView.fieldName, outputPortView.portData.identifier);
 
 			e.userData = graph.Connect(inputPort, outputPort, autoDisconnectInputs);
 
@@ -1288,13 +1299,13 @@ namespace GraphProcessor
 
 			RemoveElement(e);
 
-			if (e?.input?.node is BaseNodeView inputNodeView)
+			if (e?.input?.node is IConnectable inputNodeView)
 			{
 				e.input.Disconnect(e);
 				if (refreshPorts)
 					inputNodeView.RefreshPorts();
 			}
-			if (e?.output?.node is BaseNodeView outputNodeView)
+			if (e?.output?.node is IConnectable outputNodeView)
 			{
 				e.output.Disconnect(e);
 				if (refreshPorts)

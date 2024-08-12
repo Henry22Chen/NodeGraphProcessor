@@ -127,11 +127,11 @@ namespace NodeGraphProcessor.Examples
 							case ForLoopNode forLoopNode:
 								forLoopNode.index = forLoopNode.start - 1; // Initialize the start index
 								foreach(var n in forLoopNode.GetExecutedNodesLoopCompleted())
-									nodeToExecute.Push(n);
+									nodeToExecute.Push((BaseNode)n);
 								for(int i = forLoopNode.start; i < forLoopNode.end; i++)
 								{
 									foreach(var n in forLoopNode.GetExecutedNodesLoopBody())
-										nodeToExecute.Push(n);
+										nodeToExecute.Push((BaseNode)n);
 	
 									nodeToExecute.Push(node); // Increment the counter
 								}
@@ -141,20 +141,20 @@ namespace NodeGraphProcessor.Examples
 							// another special case for waitable nodes, like "wait for a coroutine", wait x seconds", etc.
 							case WaitableNode waitableNode:
 								foreach(var n in waitableNode.GetExecutedNodes())
-									nodeToExecute.Push(n);
+									nodeToExecute.Push((BaseNode)n);
 	
 								waitableNode.onProcessFinished += (waitedNode) =>
 								{
 									Stack<BaseNode> waitedNodes = new Stack<BaseNode>();
 									foreach(var n in waitedNode.GetExecuteAfterNodes())
-										waitedNodes.Push(n);
+										waitedNodes.Push((BaseNode)n);
 									WaitedRun(waitedNodes);
 									waitableNode.onProcessFinished = null;
 								};
 								break;
 							case IConditionalNode cNode:
 								foreach(var n in cNode.GetExecutedNodes())
-									nodeToExecute.Push(n);
+									nodeToExecute.Push((BaseNode)n);
 								break;
 							default:
 								Debug.LogError($"Conditional node {node} not handled");

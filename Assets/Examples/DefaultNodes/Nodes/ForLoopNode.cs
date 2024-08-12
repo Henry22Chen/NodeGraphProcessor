@@ -24,16 +24,16 @@ public class ForLoopNode : ConditionalNode
 
 	protected override void Process() => index++; // Implement all logic that affects the loop inner fields
 
-	public override IEnumerable< ConditionalNode >	GetExecutedNodes() => throw new System.Exception("Do not use GetExecutedNoes in for loop to get it's dependencies");
+	public override IEnumerable<IConditionalNode>	GetExecutedNodes() => throw new System.Exception("Do not use GetExecutedNoes in for loop to get it's dependencies");
 
-	public IEnumerable< ConditionalNode >	GetExecutedNodesLoopBody()
+	public IEnumerable<IConditionalNode>	GetExecutedNodesLoopBody()
 	{
 		// Return all the nodes connected to the executes port
 		return outputPorts.FirstOrDefault(n => n.fieldName == nameof(loopBody))
 			.GetEdges().Select(e => e.inputNode as ConditionalNode);
 	}
 
-	public IEnumerable< ConditionalNode >	GetExecutedNodesLoopCompleted()
+	public IEnumerable<IConditionalNode>	GetExecutedNodesLoopCompleted()
 	{
 		// Return all the nodes connected to the executes port
 		return outputPorts.FirstOrDefault(n => n.fieldName == nameof(loopCompleted))

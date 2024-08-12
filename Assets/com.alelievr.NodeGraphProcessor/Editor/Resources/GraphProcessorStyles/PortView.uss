@@ -79,3 +79,8 @@ PortView > #connector > #cap:hover
 {
     height: 6px;
 }
+
+.StackNodeVertical
+{
+    height: 24px;
+}

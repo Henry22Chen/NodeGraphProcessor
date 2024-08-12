@@ -13,10 +13,10 @@ namespace NodeGraphProcessor.Examples
 
 		public override string		name => "Start";
 
-		public IEnumerable< ConditionalNode >	GetExecutedNodes()
+		public IEnumerable<IConditionalNode>	GetExecutedNodes()
 		{
 			// Return all the nodes connected to the executes port
-			return GetOutputNodes().Where(n => n is ConditionalNode).Select(n => n as ConditionalNode);
+			return GetOutputNodes().Where(n => n is IConditionalNode).Select(n => n as IConditionalNode);
 		}
 
 		public override FieldInfo[] GetNodeFields() => base.GetNodeFields();
