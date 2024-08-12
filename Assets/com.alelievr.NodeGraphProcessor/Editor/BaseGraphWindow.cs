@@ -114,7 +114,7 @@ namespace GraphProcessor
 				return ;
 			}
 
-			graphView.Initialize(graph);
+			graphView.Initialize(graph, this);
 
 			InitializeGraphView(graphView);
 

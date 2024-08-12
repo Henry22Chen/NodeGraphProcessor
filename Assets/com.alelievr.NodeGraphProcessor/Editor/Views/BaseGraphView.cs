@@ -83,11 +83,11 @@ namespace GraphProcessor
 		Dictionary<BaseNodeView, BaseStackNodeView> pendingRestoreStackInnerNode = new Dictionary<BaseNodeView, BaseStackNodeView>();
 
 		CreateNodeMenuWindow						createNodeMenu;
-
-		/// <summary>
-		/// Triggered just after the graph is initialized
-		/// </summary>
-		public event Action							initialized;
+		BaseGraphWindow window;
+        /// <summary>
+        /// Triggered just after the graph is initialized
+        /// </summary>
+        public event Action							initialized;
 
 		/// <summary>
 		/// Triggered just after the compute order of the graph is updated
@@ -113,10 +113,12 @@ namespace GraphProcessor
 		/// </summary>
 		public event NodeDuplicatedDelegate	nodeDuplicated;
 
-		/// <summary>
-		/// Object to handle nodes that shows their UI in the inspector.
-		/// </summary>
-		[SerializeField]
+		public BaseGraphWindow Window => window;
+		internal CreateNodeMenuWindow CreateNodeMenu => createNodeMenu;
+        /// <summary>
+        /// Object to handle nodes that shows their UI in the inspector.
+        /// </summary>
+        [SerializeField]
 		protected NodeInspectorObject		nodeInspector
 		{
 			get
@@ -789,7 +791,7 @@ namespace GraphProcessor
 			UpdateNodeInspectorSelection();
 		}
 
-		public void Initialize(BaseGraph graph)
+		public void Initialize(BaseGraph graph, BaseGraphWindow window)
 		{
 			if (this.graph != null)
 			{
@@ -800,6 +802,7 @@ namespace GraphProcessor
 			}
 
 			this.graph = graph;
+			this.window = window;
 
 			exposedParameterFactory = new ExposedParameterFieldFactory(graph);
 

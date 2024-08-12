@@ -54,6 +54,7 @@ MonoBehaviour:
   - rid: 3729079658954621824
   - rid: 3729079726891598150
   - rid: 3729079726891598151
+  - rid: 3729079726891598447
   edges:
   - GUID: e83acc94-1adc-4b71-9098-68669183f86c
     owner: {fileID: 11400000}
@@ -289,8 +290,8 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 1218, y: 347, z: 0}
-  scale: {x: 0.7561437, y: 0.7561437, z: 1}
+  position: {x: 1266, y: 428, z: 0}
+  scale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
     RefIds:
@@ -1029,13 +1030,12 @@ MonoBehaviour:
     - rid: 3729079658954621728
       type: {class: NonGenericStackNode, ns: , asm: Assembly-CSharp}
       data:
-        position: {x: -1165.84, y: -198.50005}
+        position: {x: -1227.0325, y: -425.8375}
         title: NG Stack
         acceptDrop: 0
         acceptNewNode: 1
         nodeGUIDs:
         - 9f4997d3-ed71-412f-84ff-7ef501088852
-        - f7868bc8-a73a-4135-b369-19ee9b5a0a8b
     - rid: 3729079658954621824
       type: {class: ParameterNode, ns: GraphProcessor, asm: com.alelievr.NodeGraphProcessor.Runtime}
       data:
@@ -1056,12 +1056,13 @@ MonoBehaviour:
     - rid: 3729079726891598101
       type: {class: NonGenericStackNode, ns: , asm: Assembly-CSharp}
       data:
-        position: {x: -1187, y: 29.560013}
+        position: {x: -1253.29, y: -74.845}
         title: NG Stack
         acceptDrop: 0
         acceptNewNode: 1
         nodeGUIDs:
         - f7868bc8-a73a-4135-b369-19ee9b5a0a8b
+        - b94e9f23-f233-4713-a898-cf55da87e280
     - rid: 3729079726891598150
       type: {class: StackTextNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1070,14 +1071,14 @@ MonoBehaviour:
         computeOrder: 38
         position:
           serializedVersion: 2
-          x: -783.7
-          y: -108.29003
-          width: 146
+          x: -1209.7426
+          y: -280.58252
+          width: 164
           height: 61
         expanded: 0
         debug: 0
         nodeLock: 0
-        text: 
+        text: gdf
     - rid: 3729079726891598151
       type: {class: StackTextNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1086,11 +1087,27 @@ MonoBehaviour:
         computeOrder: 39
         position:
           serializedVersion: 2
-          x: -1159.29
-          y: 63.634964
+          x: -1286.4811
+          y: -42.033752
           width: 201
           height: 61
         expanded: 0
         debug: 0
         nodeLock: 0
         text: fsdgasdga
+    - rid: 3729079726891598447
+      type: {class: StackTextNode, ns: , asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: b94e9f23-f233-4713-a898-cf55da87e280
+        computeOrder: 40
+        position:
+          serializedVersion: 2
+          x: -1247.6125
+          y: -44.967506
+          width: 146
+          height: 61
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        text: 

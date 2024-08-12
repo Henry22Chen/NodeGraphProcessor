@@ -33,10 +33,33 @@ namespace GraphProcessor
             styleSheets.Add(Resources.Load<StyleSheet>(styleSheet));
         }
 
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt); 
+        }
         /// <inheritdoc />
         protected override void OnSeparatorContextualMenuEvent(ContextualMenuPopulateEvent evt, int separatorIndex)
         {
+            base.OnSeparatorContextualMenuEvent(evt, separatorIndex);
             // TODO: write the context menu for stack node
+            InsertCreateNodeAction(evt, separatorIndex, 0);
+        }
+
+        void InsertCreateNodeAction(ContextualMenuPopulateEvent evt, int separatorIndex, int itemIndex)
+        {
+            //we need to arbitrarily add the editor position values because node creation context
+            //exptects a non local coordinate
+            var mousePosition = evt.mousePosition + owner.Window.position.position;
+            evt.menu.InsertAction(itemIndex, "Add Node", (e) =>
+            {
+                var context = new NodeCreationContext
+                {
+                    screenMousePosition = mousePosition,
+                    target = this,
+                    index = separatorIndex,
+                };
+                owner.nodeCreationRequest(context);
+            });
         }
 
         /// <summary>
@@ -130,7 +153,7 @@ namespace GraphProcessor
 
         public void RestoreNode(BaseNodeView nodeView)
         {
-            int index = Mathf.Min(stackNode.nodeGUIDs.IndexOf(nodeView.nodeTarget.GUID), childCount - 1);
+            int index = Mathf.Min(stackNode.nodeGUIDs.IndexOf(nodeView.nodeTarget.GUID), childCount);
             if(index >= 0)
             {
                 InsertElement(index, nodeView);
@@ -139,7 +162,7 @@ namespace GraphProcessor
 
         public override void OnStartDragging(GraphElement ge)
         {
-            CurrentDraggingOut = null;
+            CurrentDraggingOut = ge as BaseNodeView;
 
             base.OnStartDragging(ge);
         }
