@@ -154,22 +154,6 @@ MonoBehaviour:
     outputFieldName: executes
     inputPortIdentifier: -1
     outputPortIdentifier: -1
-  - GUID: acaebaa3-017e-47b5-87a9-7d46967a98d3
-    owner: {fileID: 11400000}
-    inputNodeGUID: f9cc4f41-756d-4d00-8ef4-7a7ea67f3ba0
-    outputNodeGUID: 5fcfcc2f-dace-4edd-a1e7-a048187fd3f3
-    inputFieldName: input
-    outputFieldName: False
-    inputPortIdentifier: -1
-    outputPortIdentifier: -1
-  - GUID: d7abdcfc-0c61-4a6d-9e4e-6f27c126d973
-    owner: {fileID: 11400000}
-    inputNodeGUID: 7395c44a-bdab-4dca-a974-65c8202284b4
-    outputNodeGUID: 5fcfcc2f-dace-4edd-a1e7-a048187fd3f3
-    inputFieldName: input
-    outputFieldName: True
-    inputPortIdentifier: -1
-    outputPortIdentifier: -1
   - GUID: 09eb353e-25fe-4920-aa9a-640b11c155ae
     owner: {fileID: 11400000}
     inputNodeGUID: 1820e298-8635-4d0a-a8c5-fe25cbfadd9d
@@ -178,6 +162,22 @@ MonoBehaviour:
     outputFieldName: 
     inputPortIdentifier: 2
     outputPortIdentifier: 1000
+  - GUID: 3933fa43-93ec-4b17-b29a-478be95dc5e5
+    owner: {fileID: 11400000}
+    inputNodeGUID: 7395c44a-bdab-4dca-a974-65c8202284b4
+    outputNodeGUID: f9cc4f41-756d-4d00-8ef4-7a7ea67f3ba0
+    inputFieldName: input
+    outputFieldName: output
+    inputPortIdentifier: -1
+    outputPortIdentifier: -1
+  - GUID: 9709f050-cf0c-4225-a6b6-182ae3ab08b4
+    owner: {fileID: 11400000}
+    inputNodeGUID: df45e10c-a9da-4490-8e75-6e0b9d4e4fb9
+    outputNodeGUID: 5fcfcc2f-dace-4edd-a1e7-a048187fd3f3
+    inputFieldName: 
+    outputFieldName: True
+    inputPortIdentifier: 1
+    outputPortIdentifier: -1
   groups:
   - title: New Comment Block
     color: {r: 0, g: 0, b: 0, a: 0}
@@ -278,8 +278,8 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 1246, y: 537, z: 0}
-  scale: {x: 0.7561437, y: 0.7561437, z: 1}
+  position: {x: 1424, y: 646, z: 0}
+  scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
     RefIds:

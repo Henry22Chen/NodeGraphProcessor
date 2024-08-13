@@ -109,7 +109,8 @@ namespace GraphProcessor
 		public virtual void Initialize(IConnectable nodeView, string name)
 		{
 			this.owner = nodeView;
-			AddToClassList(fieldName);
+			if (fieldName != null)
+				AddToClassList(fieldName.ToLower());
 
 			// Correct port type if port accept multiple values (and so is a container)
 			if (direction == Direction.Input && portData.acceptMultipleEdges && portType == fieldType) // If the user haven't set a custom field type
