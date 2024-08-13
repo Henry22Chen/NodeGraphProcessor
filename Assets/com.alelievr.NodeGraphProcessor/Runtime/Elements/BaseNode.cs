@@ -690,10 +690,25 @@ namespace GraphProcessor
 		}
 
 		/// <summary>
-		/// Get all the nodes connected to the input ports of this node
+		/// Get all the nodes connected to the specified input port
 		/// </summary>
-		/// <returns>an enumerable of node</returns>
-		public IEnumerable< BaseNode > GetInputNodes()
+		/// <param name="portId"></param>
+		/// <returns></returns>
+        public IEnumerable<BaseNode> GetInputNodes(int portId)
+        {
+			if (portId < inputPorts.Count)
+			{
+				var port = inputPorts[portId];
+				foreach (var edge in port.GetEdges())
+					yield return edge.outputNode;
+			}
+        }
+
+        /// <summary>
+        /// Get all the nodes connected to the input ports of this node
+        /// </summary>
+        /// <returns>an enumerable of node</returns>
+        public IEnumerable< BaseNode > GetInputNodes()
 		{
 			foreach (var port in inputPorts)
 				foreach (var edge in port.GetEdges())
@@ -701,10 +716,25 @@ namespace GraphProcessor
 		}
 
 		/// <summary>
-		/// Get all the nodes connected to the output ports of this node
+		/// Get all the nodes connected to the specified output port
 		/// </summary>
-		/// <returns>an enumerable of node</returns>
-		public IEnumerable< BaseNode > GetOutputNodes()
+		/// <param name="portId"></param>
+		/// <returns></returns>
+		public IEnumerable<BaseNode> GetOutputNodes(int portId)
+		{
+			if (portId < outputPorts.Count)
+			{
+				var port = outputPorts[portId];
+				foreach (var edge in port.GetEdges())
+					yield return edge.inputNode;
+			}
+        }
+
+        /// <summary>
+        /// Get all the nodes connected to the output ports of this node
+        /// </summary>
+        /// <returns>an enumerable of node</returns>
+        public IEnumerable< BaseNode > GetOutputNodes()
 		{
 			foreach (var port in outputPorts)
 				foreach (var edge in port.GetEdges())
@@ -778,12 +808,44 @@ namespace GraphProcessor
 					yield return edge;
 		}
 
-		/// <summary>
-		/// Is the port an input
-		/// </summary>
-		/// <param name="fieldName"></param>
-		/// <returns></returns>
-		public bool IsFieldInput(string fieldName) => nodeFields[fieldName].input;
+		public int GetEdgeCount(bool input, int portId)
+		{
+			NodePortContainer container = input?inputPorts : outputPorts;
+			if (portId < container.Count)
+			{
+				return container[portId].GetEdges().Count;
+			}
+			return 0;
+		}
+
+		public List<SerializableEdge> GetAllEdgesForPort(bool input, int portId)
+		{
+			NodePortContainer container = input ? inputPorts : outputPorts;
+			if (portId < container.Count)
+			{
+				return container[portId].GetEdges();
+			}
+			return null;
+		}
+
+        public SerializableEdge GetEdge(bool input, int portId, int edgeId = 0)
+		{
+            NodePortContainer container = input ? inputPorts : outputPorts;
+            if (portId < container.Count)
+            {
+                var edges = container[portId].GetEdges();
+				if (edgeId < edges.Count)
+					return edges[edgeId];
+            }
+			return null;
+        }
+
+        /// <summary>
+        /// Is the port an input
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public bool IsFieldInput(string fieldName) => nodeFields[fieldName].input;
 
 		/// <summary>
 		/// Add a message on the node
