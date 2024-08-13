@@ -3,7 +3,9 @@
 }
 
 #controls {
-    background-color: rgba(63, 63, 63, 0.8);
+    background-color: rgba(63, 63, 63, 0.8);    
+    padding-top: 5px;
+    padding-bottom:10px;
 }
 
 #settings-button {
