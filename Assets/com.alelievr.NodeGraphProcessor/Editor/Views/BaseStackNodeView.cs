@@ -85,23 +85,13 @@ namespace GraphProcessor
         void InitializeInnerNodes()
         {
             int i = 0;
-            // Sanitize the GUID list in case some nodes were removed
-            stackNode.nodeGUIDs.RemoveAll(nodeGUID =>
+            foreach(var node in stackNode.InnerNodes.ToArray())
             {
-                if (owner.graph.nodesPerGUID.ContainsKey(nodeGUID))
-                {
-                    var node = owner.graph.nodesPerGUID[nodeGUID];
-                    var view = owner.nodeViewsPerNode[node] as GraphElement;
-                    view.AddToClassList("stack-child__" + i);
-                    i++;
-                    AddElement(view);
-                    return false;
-                }
-                else
-                {
-                    return true; // remove the entry as the GUID doesn't exist anymore
-                }
-            });
+                var view = owner.nodeViewsPerNode[node] as GraphElement;
+                view.AddToClassList("stack-child__" + i);
+                i++;
+                AddElement(view);
+            }
         }
 
 
@@ -118,8 +108,6 @@ namespace GraphProcessor
             {
                 AddPort(outputPort, Direction.Output, listener, outputPort.portData);
             }
-
-            
         }
 
 
@@ -185,17 +173,21 @@ namespace GraphProcessor
 
             if (accept && nodeView != null)
             {
-                var index = Mathf.Clamp(proposedIndex, 0, Mathf.Max(stackNode.nodeGUIDs.Count - 1, 0));
+                var index = Mathf.Clamp(proposedIndex, 0, Mathf.Max(stackNode.InnerNodes.Count - 1, 0));
 
-                int oldIndex = stackNode.nodeGUIDs.FindIndex(g => g == nodeView.nodeTarget.GUID);
+                int oldIndex = stackNode.GetInnerNodeIndex(nodeView.nodeTarget);
                 if (oldIndex != -1)
                 {
-                    stackNode.nodeGUIDs.Remove(nodeView.nodeTarget.GUID);
                     if (oldIndex != index)
+                    {
+                        stackNode.TryRemoveInnerNode(nodeView.nodeTarget);
                         onNodeReordered?.Invoke(nodeView, oldIndex, index);
+                    }
+                    else
+                        return accept;
                 }
 
-                stackNode.nodeGUIDs.Insert(index, nodeView.nodeTarget.GUID);
+                stackNode.AddInnerNode(index, nodeView.nodeTarget);
             }
 
             return accept;
@@ -205,20 +197,20 @@ namespace GraphProcessor
         {
             if (element is BaseNodeView nodeView)
             {
-                var index = Mathf.Clamp(proposedIndex, 0, Mathf.Max(stackNode.nodeGUIDs.Count - 1, 0));
-                stackNode.nodeGUIDs.Insert(index, nodeView.nodeTarget.GUID);
+                var index = Mathf.Clamp(proposedIndex, 0, Mathf.Max(stackNode.InnerNodes.Count - 1, 0));
+                
                 InsertElement(index, element);
             }
         }
 
         public void RemoveNode(BaseNode node)
         {
-            stackNode.nodeGUIDs.Remove(node.GUID);
+            stackNode.TryRemoveInnerNode(node);
         }
 
         public void RestoreNode(BaseNodeView nodeView)
         {
-            int index = Mathf.Min(stackNode.nodeGUIDs.IndexOf(nodeView.nodeTarget.GUID), childCount);
+            int index = Mathf.Min(stackNode.GetInnerNodeIndex(nodeView.nodeTarget), childCount);
             if(index >= 0)
             {
                 InsertElement(index, nodeView);

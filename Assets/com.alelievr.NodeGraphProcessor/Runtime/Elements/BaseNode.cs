@@ -210,7 +210,7 @@ namespace GraphProcessor
 		#region Initialization
 
 		// called by the BaseGraph when the node is added to the graph
-		public void Initialize(BaseGraph graph)
+		public virtual void Initialize(BaseGraph graph)
 		{
 			this.graph = graph;
 

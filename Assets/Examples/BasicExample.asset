@@ -278,7 +278,7 @@ MonoBehaviour:
     title: New Sticky Note
     content: Write your text here
   nodeInspectorReference: {fileID: 0}
-  position: {x: 1424, y: 646, z: 0}
+  position: {x: 1446, y: 590, z: 0}
   scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
@@ -1065,10 +1065,10 @@ MonoBehaviour:
         computeOrder: -1
         position:
           serializedVersion: 2
-          x: -1057.45
-          y: -577.35016
+          x: -1043.85
+          y: -576.9502
           width: 237
-          height: 166
+          height: 174
         expanded: 0
         debug: 0
         nodeLock: 0
@@ -1101,10 +1101,10 @@ MonoBehaviour:
         computeOrder: 40
         position:
           serializedVersion: 2
-          x: -828.00006
-          y: -865.9501
-          width: 100
-          height: 100
+          x: -1052.1001
+          y: -445
+          width: 213
+          height: 133
         expanded: 0
         debug: 0
         nodeLock: 0
@@ -1118,8 +1118,8 @@ MonoBehaviour:
         computeOrder: -1
         position:
           serializedVersion: 2
-          x: -1086.1
-          y: -329.05008
+          x: -1044
+          y: -20.381409
           width: 207
           height: 78
         expanded: 0
@@ -1136,10 +1136,10 @@ MonoBehaviour:
         computeOrder: -1
         position:
           serializedVersion: 2
-          x: -666.5
-          y: -595.4002
+          x: -714.3
+          y: -569.0001
           width: 170
-          height: 166
+          height: 176
         expanded: 0
         debug: 0
         nodeLock: 0
@@ -1147,6 +1147,7 @@ MonoBehaviour:
         acceptNewNode: 1
         nodeGUIDs:
         - df45e10c-a9da-4490-8e75-6e0b9d4e4fb9
+        - 489c1e14-771b-4883-bc39-9b9e676d70c6
     - rid: 3729079730230002291
       type: {class: StackTextNode, ns: , asm: Assembly-CSharp}
       data:
@@ -1191,10 +1192,10 @@ MonoBehaviour:
         computeOrder: 42
         position:
           serializedVersion: 2
-          x: -668.50006
-          y: -260.10004
-          width: 100
-          height: 100
+          x: -738.75
+          y: -304.72
+          width: 146
+          height: 133
         expanded: 0
         debug: 0
         nodeLock: 0
