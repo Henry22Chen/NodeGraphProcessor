@@ -203,10 +203,14 @@ namespace GraphProcessor
             
             graphView.RegisterCompleteObjectUndo("Added " + nodeType);
             var node = BaseNode.CreateFromType(nodeType, graphMousePosition);
-            var view = graphView.AddNode(node);
+            IConnectable view;
+            if (node is BaseStackNode stackNode)
+                view = graphView.AddStackNode(stackNode);
+            else
+                view = graphView.AddNode(node);
             if (currentStackNode != null)
             {
-                currentStackNode.AddNode(view, ref currentStackIndex);
+                currentStackNode.AddNode((GraphElement)view, ref currentStackIndex);
             }
             if (searchTreeEntry.userData is NodeProvider.PortDescription desc)
             {

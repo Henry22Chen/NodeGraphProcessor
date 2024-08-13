@@ -30,18 +30,6 @@ namespace GraphProcessor
 
         public override string name => "Stack";
 
-        public BaseStackNode(Rect position, bool acceptDrop = true, bool acceptNewNode = true)
-            :this()
-        {
-            this.position = position;
-            this.acceptDrop = acceptDrop;
-            this.acceptNewNode = acceptNewNode;
-        }
-
-        public BaseStackNode() : base()
-        {
-        }
-
         protected override void Process()
         {
             base.Process();

@@ -6,23 +6,13 @@ using System.Linq;
 using NodeGraphProcessor.Examples;
 
 [System.Serializable]
+[NodeMenuItem("NonGeneric Stack")]
 public class NonGenericStackNode : BaseStackNode,IConditionalNode
 {
     [Input]
     public ConditionalLink input;
     [Output]
     public ConditionalLink output;
-
-    public NonGenericStackNode(Rect pos)
-        : base(pos, false)
-    {
-
-    }
-
-    public NonGenericStackNode() : base()
-    {
-
-    }
 
     public override string name => "NG Stack";
     public override bool AcceptAllNodes => false;
