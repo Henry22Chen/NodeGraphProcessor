@@ -257,6 +257,19 @@ namespace GraphProcessor
 				// If the nodes were copied from another graph, then the source is null
 				if (sourceNode != null)
 					nodeDuplicated?.Invoke(sourceNode, node);
+				if (!string.IsNullOrEmpty(node.parentGUID))
+				{
+					if(graph.nodesPerGUID.TryGetValue(node.parentGUID, out BaseNode parentNode))
+					{
+						if(parentNode is BaseStackNode stackNode) 
+						{
+							stackNode.AddInnerNode(-1, node);
+							BaseStackNodeView nodeView = nodeViewsPerNode[stackNode] as BaseStackNodeView;
+							int idx = int.MaxValue;
+							nodeView?.AddNode(newNodeView, ref idx);
+						}
+					}
+				}
 				copiedNodesMap[sourceGUID] = node;
 
 				//Select the new node
@@ -358,7 +371,7 @@ namespace GraphProcessor
 						case EdgeView edge:
 							Disconnect(edge);
 							return true;
-						case BaseNodeView nodeView:
+						case BaseNodeView nodeView: 
 							// For vertical nodes, we need to delete them ourselves as it's not handled by GraphView
 							foreach (var pv in nodeView.inputPortViews.Concat(nodeView.outputPortViews))
 								if (pv.orientation == Orientation.Vertical)
@@ -367,6 +380,16 @@ namespace GraphProcessor
 
 							nodeInspector.NodeViewRemoved(nodeView);
 							ExceptionToLog.Call(() => nodeView.OnRemoved());
+							if(!string.IsNullOrEmpty(nodeView.nodeTarget.parentGUID))
+							{
+								if(graph.nodesPerGUID.TryGetValue(nodeView.nodeTarget.parentGUID, out var parentNode)) 
+								{
+									if(parentNode is BaseStackNode stackNode)
+									{
+										stackNode.TryRemoveInnerNode(nodeView.nodeTarget);
+									}
+								}
+							}
 							graph.RemoveNode(nodeView.nodeTarget);
 							UpdateSerializedProperties();
 							RemoveElement(nodeView);

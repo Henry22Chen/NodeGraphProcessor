@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 
 namespace GraphProcessor
 {
@@ -46,6 +45,11 @@ namespace GraphProcessor
                 if (graph.nodesPerGUID.ContainsKey(nodeGUID))
                 {
                     var node = graph.nodesPerGUID[nodeGUID];
+                    if(node.parentGUID != GUID)
+                    {
+                        node.parentGUID = GUID;
+                        Debug.LogWarning($"{node.name}({node.GUID})'s parent GUID doesn't match, fixing to correct value({GUID})");
+                    }
                     innerNodes.Add(node);
                 }
                 else
@@ -61,8 +65,17 @@ namespace GraphProcessor
 
         internal void AddInnerNode(int index, BaseNode node)
         {
-            nodeGUIDs.Insert(index, node.GUID);
-            innerNodes.Insert(index, node);
+            if (index < 0)
+            {
+                nodeGUIDs.Add(node.GUID);
+                innerNodes.Add(node);
+            }
+            else
+            {
+                nodeGUIDs.Insert(index, node.GUID);
+                innerNodes.Insert(index, node);
+            }
+            node.parentGUID = GUID;
         }
 
         internal int GetInnerNodeIndex(BaseNode node)
@@ -73,6 +86,8 @@ namespace GraphProcessor
         internal int TryRemoveInnerNode(BaseNode node)
         {
             int oldIdx = nodeGUIDs.IndexOf(node.GUID);
+            if (oldIdx >= 0 && node.parentGUID == GUID)
+                node.parentGUID = null;
             nodeGUIDs.Remove(node.GUID);
             innerNodes.Remove(node);
             return oldIdx;
