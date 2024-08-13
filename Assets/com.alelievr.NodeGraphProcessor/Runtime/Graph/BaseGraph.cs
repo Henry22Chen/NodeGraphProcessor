@@ -472,6 +472,8 @@ namespace GraphProcessor
 			{
 				foreach (var node in nodes)
 					node.DisableInternal();
+				foreach (var node in stackNodes)
+					node.DisableInternal();
 			}
 
 			MigrateGraphIfNeeded();

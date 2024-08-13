@@ -772,10 +772,10 @@ namespace GraphProcessor
 
 			// And re-add with new up to date datas
 			InitializeNodeViews();
-			InitializeEdgeViews();
+            InitializeStackNodes();
+            InitializeEdgeViews();
             InitializeGroups();
 			InitializeStickyNotes();
-			InitializeStackNodes();
 
 			Reload();
 
