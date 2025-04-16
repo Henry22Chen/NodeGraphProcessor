@@ -242,10 +242,18 @@ namespace GraphProcessor
             return base.DragPerform(evt, selection, dropTarget, dragSource);
         }
 
+#if UNITY_6000_0_OR_NEVER
         protected override void HandleEventBubbleUp(EventBase evt)
         {
             base.HandleEventBubbleUp(evt);
         }
+
+#else
+        protected override void ExecuteDefaultAction(EventBase evt)
+        {
+            base.ExecuteDefaultAction(evt);
+        }
+#endif
 
         public virtual void OnPortConnected(PortView port)
         {
