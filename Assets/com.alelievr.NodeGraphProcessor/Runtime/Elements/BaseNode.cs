@@ -110,7 +110,7 @@ namespace GraphProcessor
 		public event Action					onPortsUpdated;
 
 		[NonSerialized]
-		bool _needsInspector = false;
+		protected bool _needsInspector = false;
 
 		/// <summary>
 		/// Does the node needs to be visible in the inspector (when selected).
@@ -135,8 +135,10 @@ namespace GraphProcessor
 		protected virtual bool hasCustomInputs => false;
         protected virtual bool hasCustomOutputs => false;
 
+        protected virtual bool fieldsSortedDescending => true;
+
         [NonSerialized]
-		internal Dictionary< string, NodeFieldInformation >	nodeFields = new Dictionary< string, NodeFieldInformation >();
+		protected internal Dictionary< string, NodeFieldInformation >	nodeFields = new Dictionary< string, NodeFieldInformation >();
 
 		[NonSerialized]
 		List< string >				messages = new List<string>();
@@ -144,25 +146,53 @@ namespace GraphProcessor
 		[NonSerialized]
 		protected BaseGraph			graph;
 
-		internal class NodeFieldInformation
+		[NonSerialized]
+		private bool _initPortByReflection = false;
+		
+		protected internal class NodeFieldInformation
 		{
 			public string						name;
 			public string						fieldName;
-			public FieldInfo					info;
 			public bool							input;
 			public bool							isMultiple;
 			public string						tooltip;
 			public bool							vertical;
+			public int							sortingOrder;
 
+			public FieldInfo info
+			{
+				get
+				{
+					if (_info == null)
+						_info = _node.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+					return _info;
+				}
+			}
+
+			private BaseNode _node;
+			private FieldInfo _info;
+			
 			public NodeFieldInformation(FieldInfo info, string name, bool input, bool isMultiple, string tooltip, bool vertical)
 			{
 				this.input = input;
 				this.isMultiple = isMultiple;
-				this.info = info;
+				this._info = info;
 				this.name = name;
 				this.fieldName = info.Name;
 				this.tooltip = tooltip;
 				this.vertical = vertical;
+			}
+
+			public NodeFieldInformation(BaseNode node, string fieldName, string name, bool input, bool isMultiple, string tooltip, bool vertical, int sortingOrder)
+			{
+				this._node = node;
+				this.input = input;
+				this.isMultiple = isMultiple;
+				this.name = name;
+				this.fieldName = fieldName;
+				this.tooltip = tooltip;
+				this.vertical = vertical;
+				this.sortingOrder = sortingOrder;
 			}
 		}
 
@@ -256,16 +286,31 @@ namespace GraphProcessor
                 allCustom = false;
             if (!allCustom)
 			{
-				foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+				void AddPort(NodeFieldInformation nodeField)
 				{
-					var nodeField = nodeFields[key.Name];
 					if (nodeField.input && hasCustomInputs)
-						continue;
+						return;
 					if (!nodeField.input && hasCustomOutputs)
-						continue;
+						return;
 
 					// If we don't have a custom behavior on the node, we just have to create a simple port 
-					AddPort(nodeField.input, new PortData { acceptMultipleEdges = nodeField.isMultiple, isField = true, fieldName = nodeField.fieldName, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
+					this.AddPort(nodeField.input, new PortData { acceptMultipleEdges = nodeField.isMultiple, isField = true, fieldName = nodeField.fieldName, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
+				}
+				
+				if (_initPortByReflection)
+				{
+					foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+					{
+						var nodeField = nodeFields[key.Name];
+						AddPort(nodeField);
+					}
+				}
+				else
+				{
+					foreach (var nodeField in OverrideFieldOrder(nodeFields.Values))
+					{
+						AddPort(nodeField);
+					}
 				}
             }
 		}
@@ -291,7 +336,14 @@ namespace GraphProcessor
 			}
 
 			// Order by MetadataToken and inheritance level to sync the order with the port order (make sure FieldDrawers are next to the correct port)
-			return fields.OrderByDescending(f => (long)(((GetFieldInheritanceLevel(f) << 32)) | (long)f.MetadataToken));
+			if (fieldsSortedDescending)
+				return fields.OrderByDescending(f => (long)((GetFieldInheritanceLevel(f) << 32) | (long)f.MetadataToken));
+			return fields.OrderBy(f => (long)((GetFieldInheritanceLevel(f) << 32) | (long)f.MetadataToken));
+		}
+
+		protected virtual IEnumerable<NodeFieldInformation> OverrideFieldOrder(IEnumerable<NodeFieldInformation> fields)
+		{
+			return fields.OrderBy(f => f.sortingOrder);
 		}
 
 		protected BaseNode()
@@ -299,7 +351,7 @@ namespace GraphProcessor
             inputPorts = new NodeInputPortContainer(this);
             outputPorts = new NodeOutputPortContainer(this);
 
-			InitializeInOutDatas();
+            InitializeFieldData();
 		}
 
 		protected Func<T> CreateOutputReader<T>(Func<T> field)
@@ -351,6 +403,7 @@ namespace GraphProcessor
 
                 finalPorts.Add(data.identifier);
 			}
+			
             if (hasCustomInputs)
             {
                 int identifier = 0;
@@ -362,6 +415,7 @@ namespace GraphProcessor
             }
             else
                 allCustom = false;
+            
             if (hasCustomOutputs)
             {
                 int identifier = 1000;
@@ -373,18 +427,34 @@ namespace GraphProcessor
             }
             else
                 allCustom = false;
+            
             if (!allCustom)
             {
-                foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+                void AddFieldPort(NodeFieldInformation nodeField)
                 {
-                    var nodeField = nodeFields[key.Name];
-                    if (nodeField.input && hasCustomInputs)
-                        continue;
-                    if (!nodeField.input && hasCustomOutputs)
-                        continue;
+	                if (nodeField.input && hasCustomInputs)
+		                return;
+	                if (!nodeField.input && hasCustomOutputs)
+		                return;
 
-                    // If we don't have a custom behavior on the node, we just have to create a simple port 
-                    AddPort(nodeField.input, new PortData { acceptMultipleEdges = nodeField.isMultiple, isField = true, fieldName = nodeField.fieldName, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
+	                // If we don't have a custom behavior on the node, we just have to create a simple port 
+	                this.AddPort(nodeField.input, new PortData { acceptMultipleEdges = nodeField.isMultiple, isField = true, fieldName = nodeField.fieldName, displayName = nodeField.name, tooltip = nodeField.tooltip, vertical = nodeField.vertical });
+                }
+				
+                if (_initPortByReflection)
+                {
+	                foreach (var key in OverrideFieldOrder(nodeFields.Values.Select(k => k.info)))
+	                {
+		                var nodeField = nodeFields[key.Name];
+		                AddFieldPort(nodeField);
+	                }
+                }
+                else
+                {
+	                foreach (var nodeField in OverrideFieldOrder(nodeFields.Values))
+	                {
+		                AddFieldPort(nodeField);
+	                }
                 }
             }
 
@@ -442,7 +512,7 @@ namespace GraphProcessor
 		void InitializeInOutDatas()
 		{
 			var fields = GetNodeFields();
-			var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			// var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
 			foreach (var field in fields)
 			{
@@ -475,7 +545,14 @@ namespace GraphProcessor
 				// By default we set the behavior to null, if the field have a custom behavior, it will be set in the loop just below
 				nodeFields[field.Name] = new NodeFieldInformation(field, name, input, isMultiple, tooltip, vertical != null);
 			}
-        }
+
+			_initPortByReflection = true;
+		}
+
+		protected virtual void InitializeFieldData()
+		{
+			InitializeInOutDatas();
+		}
 
 		#endregion
 
@@ -542,6 +619,19 @@ namespace GraphProcessor
 			value = default;
             return TryReadInputValue(index, ref value, edgeIndex);
         }
+
+        protected bool TryReadInputValue<T>(int inputIdx, ref T field, BaseNode prevNode)
+        {
+	        var port = inputPorts[inputIdx];
+	        var edges = port.GetEdges();
+	        if (edges.Count > 0)
+	        {
+		        var edge = edges.FirstOrDefault(e => e.outputNode == prevNode);
+		        return TryReadInputValue<T>(ref field, edge);
+	        }
+	        return false;
+        }
+        
         protected bool TryReadInputValue<T>(int index, ref T field, int edgeIdx = 0)
 		{
 			var port = inputPorts[index];
@@ -549,6 +639,16 @@ namespace GraphProcessor
 			if (edges.Count > 0)
 			{
 				var edge = edges[edgeIdx];
+				return TryReadInputValue<T>(ref field, edge);
+			}
+			
+			return false;
+		}
+
+		private bool TryReadInputValue<T>(ref T field, SerializableEdge edge)
+		{
+			if (edge != null)
+			{
 				var inputPort = edge.outputPort;
 				int outputEdgeIdx = edge.inputEdgeIndex;
 				if (inputPort.owner.TryGetOutputValue(inputPort.index, out field, outputEdgeIdx))
@@ -556,7 +656,37 @@ namespace GraphProcessor
 			}
 			return false;
 		}
-
+        
+		/// <summary>
+		/// Get input value from the previous node, and convert it's type from <typeparamref name="T"/> to <typeparamref name="T2"/>
+		/// </summary>
+		/// <param name="index">input port index</param>
+		/// <param name="field"></param>
+		/// <param name="prevNode"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <returns></returns>
+		protected bool TryReadInputValue<T, T2>(int index, ref T2 field, BaseNode prevNode)
+		{
+			var port = inputPorts[index];
+			var edges = port.GetEdges();
+			if (edges.Count > 0)
+			{
+				var edge = edges.FirstOrDefault(e => e.outputNode == prevNode);
+				return TryReadInputValue<T, T2>(ref field, edge);
+			}
+			return false;
+		}
+		
+		/// <summary>
+		/// Get input value from the previous node, and convert it's type from <typeparamref name="T"/> to <typeparamref name="T2"/>
+		/// </summary>
+		/// <param name="index">input port index</param>
+		/// <param name="field"></param>
+		/// <param name="edgeIdx"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <returns></returns>
         protected bool TryReadInputValue<T, T2>(int index, ref T2 field, int edgeIdx = 0)
         {
             var port = inputPorts[index];
@@ -564,19 +694,38 @@ namespace GraphProcessor
             if (edges.Count > 0)
             {
                 var edge = edges[edgeIdx];
-                var inputPort = edge.outputPort;
-                int outputEdgeIdx = edge.inputEdgeIndex; 
-                if (inputPort.owner.TryGetOutputValue<T>(inputPort.index, out var val, outputEdgeIdx))
-				{
-                    field = TypeAdapter.Convert<T, T2>(val);
-					return true;
-                }
+                return TryReadInputValue<T, T2>(ref field, edge);
             }
             return false;
         }
+        
+        private bool TryReadInputValue<T, T2>(ref T2 field, SerializableEdge edge)
+        {
+	        if (edge != null)
+	        {
+		        var inputPort = edge.outputPort;
+		        int outputEdgeIdx = edge.inputEdgeIndex; 
+		        if (inputPort.owner.TryGetOutputValue<T>(inputPort.index, out var val, outputEdgeIdx))
+		        {
+			        field = TypeAdapter.Convert<T, T2>(val);
+			        return true;
+		        }
+	        }
+	        return false;
+        }
 
-        public void OnProcess()
+        private void Preprocess(BaseNode prevNode)
+        {
+	        ExceptionToLog.Call(() =>
+	        {
+		        if (!PrepareInputs(prevNode))
+		        	PrepareInputsGenerated(prevNode);
+	        });
+        }
+
+        public void OnProcess(BaseNode prevNode = null)
 		{
+			Preprocess(prevNode);
 			ExceptionToLog.Call(() => Process());
 
 			InvokeOnProcessed();
@@ -602,6 +751,17 @@ namespace GraphProcessor
 		/// </summary>
 		protected virtual void Process() {}
 
+		/// <summary>
+		/// Override this method to implement custom input value processing
+		/// </summary>
+		/// <param name="prevNode"></param>
+		/// <returns></returns>
+		protected virtual bool PrepareInputs(BaseNode prevNode = null)
+		{
+			return false;
+		}
+		
+		protected virtual void PrepareInputsGenerated(BaseNode prevNode = null) {}
 		#endregion
 
 		#region API and utils

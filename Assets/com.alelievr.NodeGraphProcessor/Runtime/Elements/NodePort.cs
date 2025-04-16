@@ -96,7 +96,19 @@ namespace GraphProcessor
 		/// <summary>
 		/// The fieldInfo from the fieldName
 		/// </summary>
-		public FieldInfo			fieldInfo;
+		public FieldInfo			fieldInfo 
+		{
+			get
+			{
+				if (_fieldInfo == null && !string.IsNullOrEmpty(fieldName))
+					_fieldInfo = fieldOwner.GetType().GetField(
+						fieldName,
+						BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+				return _fieldInfo;
+			}
+		}
+
+		private FieldInfo _fieldInfo;
 		/// <summary>
 		/// Data of the port
 		/// </summary>
@@ -136,12 +148,12 @@ namespace GraphProcessor
 
 			}
 
-			if (!string.IsNullOrEmpty(fieldName))
-			{
-				fieldInfo = fieldOwner.GetType().GetField(
-					fieldName,
-					BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-			}
+			// if (!string.IsNullOrEmpty(fieldName))
+			// {
+			// 	fieldInfo = fieldOwner.GetType().GetField(
+			// 		fieldName,
+			// 		BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			// }
 		}
 
 		/// <summary>

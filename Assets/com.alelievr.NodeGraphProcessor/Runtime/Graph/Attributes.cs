@@ -171,4 +171,9 @@ namespace GraphProcessor
             StackNodeType = stackNodeType;
         }
     }
+    
+    [AttributeUsage(AttributeTargets.Class)]
+    public class PartialNodeAttribute : Attribute
+    {
+    }
 }
