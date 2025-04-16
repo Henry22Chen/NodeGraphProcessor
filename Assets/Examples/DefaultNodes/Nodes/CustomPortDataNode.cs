@@ -23,7 +23,7 @@ public class CustomPortData : BaseNode
             float floatVal = 0;
             if (!TryReadInputValue(0, ref floatVal, i))
             {
-                TryReadInputValue<int, float>(i, ref floatVal);
+                TryReadInputValue<int, float>(0, ref floatVal, i);
             }
             output += floatVal;
         }

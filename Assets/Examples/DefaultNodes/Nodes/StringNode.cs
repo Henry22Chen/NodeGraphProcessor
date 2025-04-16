@@ -11,4 +11,9 @@ public class StringNode : BaseNode
 	public string				output;
 
 	public override string		name => "String";
+
+	protected override bool TryGetOutputValue<T>(int index, out T value, int edgeIndex)
+	{
+		return TryConvertValue(ref output, out value);
+	}
 }

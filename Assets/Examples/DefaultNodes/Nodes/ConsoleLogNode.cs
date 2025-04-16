@@ -37,5 +37,12 @@ namespace NodeGraphProcessor.Examples
 					break;
 			}
 		}
+
+		protected override bool PrepareInputs(BaseNode prevNode = null)
+		{
+			TryReadInputValue(0, ref logText);
+			TryReadInputValue(1, ref obj);
+			return true;
+		}
 	}
 }

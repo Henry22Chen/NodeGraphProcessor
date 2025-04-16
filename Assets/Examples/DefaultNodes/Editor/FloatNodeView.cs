@@ -52,3 +52,26 @@ public class Float2NodeView : BaseNodeView
         controlsContainer.Add(floatField);
     }
 }
+
+[NodeCustomEditor(typeof(Float4Node))]
+public class Float4NodeView : BaseNodeView
+{
+	public override void Enable()
+	{
+		var floatNode = nodeTarget as Float4Node;
+
+		DoubleField floatField = new DoubleField
+		{
+			value = floatNode.input
+		};
+
+		floatNode.onProcessed += () => floatField.value = floatNode.input;
+
+		floatField.RegisterValueChangedCallback((v) => {
+			owner.RegisterCompleteObjectUndo("Updated floatNode input");
+			floatNode.input = (float)v.newValue;
+		});
+
+		controlsContainer.Add(floatField);
+	}
+}
